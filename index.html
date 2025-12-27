@@ -8,8 +8,8 @@
         :root {
             --bg-color: #050005;
             --term-bg: rgba(20, 0, 20, 0.85);
-            --primary: #bd00ff; /* Фиолетовый */
-            --secondary: #ff0055; /* Красный */
+            --primary: #bd00ff;
+            --secondary: #ff0055;
             --text-main: #eaeaea;
             --text-dim: #888;
             --font-stack: 'Courier New', Courier, monospace;
@@ -25,7 +25,7 @@
             background-color: var(--bg-color);
             color: var(--text-main);
             font-family: var(--font-stack);
-            overflow: hidden; /* Чтобы скролл не появлялся из-за канваса */
+            overflow: hidden;
             height: 100vh;
             display: flex;
             justify-content: center;
@@ -33,7 +33,6 @@
             position: relative;
         }
 
-        /* Canvas Background */
         canvas {
             position: absolute;
             top: 0;
@@ -41,7 +40,6 @@
             z-index: 1;
         }
 
-        /* CRT Scanline Effect Overlay */
         .scanlines {
             position: fixed;
             top: 0;
@@ -57,11 +55,10 @@
             );
             background-size: 100% 4px;
             z-index: 2;
-            pointer-events: none; /* Пропускает клики сквозь себя */
+            pointer-events: none;
             opacity: 0.6;
         }
 
-        /* Main Terminal Window */
         .terminal-window {
             position: relative;
             z-index: 3;
@@ -78,7 +75,6 @@
             animation: fadeIn 1s ease-out;
         }
 
-        /* Terminal Header */
         .terminal-header {
             background: linear-gradient(90deg, rgba(189,0,255,0.2), rgba(255,0,85,0.2));
             padding: 10px 15px;
@@ -111,7 +107,6 @@
             opacity: 0.8;
         }
 
-        /* Terminal Body */
         .terminal-body {
             padding: 20px;
             overflow-y: auto;
@@ -120,7 +115,6 @@
             line-height: 1.5;
         }
 
-        /* Custom Scrollbar */
         .terminal-body::-webkit-scrollbar {
             width: 8px;
         }
@@ -132,7 +126,6 @@
             border-radius: 4px;
         }
 
-        /* Typography & Elements */
         .prompt {
             color: var(--secondary);
             font-weight: bold;
@@ -147,7 +140,7 @@
 
         .output {
             margin-bottom: 20px;
-            opacity: 0; /* Скрыто до анимации */
+            opacity: 0;
             animation: textFadeIn 0.5s forwards;
         }
 
@@ -195,7 +188,6 @@
             vertical-align: middle;
         }
 
-        /* Animations */
         @keyframes blink {
             0%, 100% { opacity: 1; }
             50% { opacity: 0; }
@@ -211,7 +203,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Responsive */
         @media (max-width: 600px) {
             .info-grid {
                 grid-template-columns: 1fr;
@@ -225,13 +216,10 @@
 </head>
 <body>
 
-    <!-- Матричный фон -->
     <canvas id="matrixCanvas"></canvas>
     
-    <!-- Эффект старого монитора -->
     <div class="scanlines"></div>
 
-    <!-- Окно терминала -->
     <div class="terminal-window">
         <div class="terminal-header">
             <div class="dots">
@@ -242,12 +230,10 @@
             <div class="title">siright@endeavouros: ~/portfolio</div>
         </div>
         <div class="terminal-body" id="terminalContent">
-            <!-- Контент будет добавлен через JS -->
         </div>
     </div>
 
     <script>
-        // --- 1. MATRIX BACKGROUND (Оптимизированный) ---
         const canvas = document.getElementById('matrixCanvas');
         const ctx = canvas.getContext('2d');
 
@@ -260,28 +246,23 @@
         window.addEventListener('resize', () => {
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
-            // Сброс позиций при ресайзе не обязателен, но желателен для красоты
         });
 
         function matrix() {
-            // Полупрозрачный черный слой для следа
             ctx.fillStyle = 'rgba(5, 0, 5, 0.05)'; 
             ctx.fillRect(0, 0, width, height);
 
             ctx.font = '15pt monospace';
 
             ypos.forEach((y, ind) => {
-                // Случайные числа 0-9
                 const text = Math.floor(Math.random() * 10).toString();
                 
-                // Градиент цвета: Рандом между фиолетовым и красным
                 const isRed = Math.random() > 0.5;
                 ctx.fillStyle = isRed ? '#ff0055' : '#bd00ff';
 
                 const x = ind * 20;
                 ctx.fillText(text, x, y);
 
-                // Случайный сброс столбца, если он ушел за экран
                 if (y > 100 + Math.random() * 10000) ypos[ind] = 0;
                 else ypos[ind] = y + 20;
             });
@@ -291,11 +272,9 @@
 
         requestAnimationFrame(matrix);
 
-        // --- 2. TERMINAL LOGIC ---
         
         const terminalContent = document.getElementById('terminalContent');
 
-        // Данные для вывода
         const data = [
             {
                 cmd: './whoami.sh',
@@ -349,7 +328,7 @@
             },
             {
                 cmd: '',
-                output: '' // Пустая строка для финального курсора
+                output: ''
             }
         ];
 
@@ -363,7 +342,7 @@
                     if (i < text.length) {
                         element.innerHTML += text.charAt(i);
                         i++;
-                        setTimeout(type, Math.random() * 50 + 30); // Случайная скорость печати
+                        setTimeout(type, Math.random() * 50 + 30);
                     } else {
                         resolve();
                     }
@@ -374,57 +353,45 @@
 
         async function runTerminal() {
             for (const item of data) {
-                // Создаем строку ввода
                 const line = document.createElement('div');
                 line.style.marginBottom = '5px';
                 
-                // Формируем HTML для промпта
                 const promptSpan = `<span class="prompt">[siright@endeavouros]</span> <span class="path">~</span>$ `;
                 
-                // Контейнер для команды (чтобы курсор был рядом)
                 const cmdSpan = document.createElement('span');
                 cmdSpan.className = 'command';
                 
                 line.innerHTML = promptSpan;
                 line.appendChild(cmdSpan);
                 
-                // Добавляем курсор
                 const cursor = document.createElement('span');
                 cursor.className = 'cursor';
                 line.appendChild(cursor);
                 
                 terminalContent.appendChild(line);
 
-                // Скролл вниз
                 terminalContent.scrollTop = terminalContent.scrollHeight;
 
                 if (item.cmd) {
-                    // Эффект печати
                     await typeWriter(item.cmd, cmdSpan);
                     
-                    // Пауза перед выводом результата
                     await new Promise(r => setTimeout(r, 300));
                     
-                    // Удаляем курсор со строки команды
                     cursor.remove();
 
-                    // Выводим результат (HTML)
                     const outputDiv = document.createElement('div');
                     outputDiv.className = 'output';
                     outputDiv.innerHTML = item.output;
                     terminalContent.appendChild(outputDiv);
                     
-                    // Пауза перед следующей командой
                     await new Promise(r => setTimeout(r, 600));
                 } else {
-                    // Финальный промпт, курсор остается
                 }
                 
                 terminalContent.scrollTop = terminalContent.scrollHeight;
             }
         }
 
-        // Запуск через небольшую задержку
         setTimeout(runTerminal, 1000);
 
     </script>
