@@ -3,297 +3,375 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Siri_Lv | Siright - Developer Portfolio</title>
+    <title>Python Runner</title>
     <style>
-        :root {
-            --bg: #150822;
-            --term-bg: rgba(12, 5, 20, 0.9);
-            --purple: #b24aff;
-            --red: #ff2266;
-            --text: #e8e8e8;
-            --dim: #666;
-            --border: #2a1445;
-        }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
+        
         body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'Courier New', monospace;
-            height: 100vh;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background: #0d0018;
+            color: #e0e0e0;
+            font-family: 'Consolas', monospace;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        #bg {
+        #matrix {
             position: fixed;
             top: 0;
             left: 0;
             z-index: 0;
         }
 
-        .noise {
-            position: fixed;
-            inset: 0;
-            background: repeating-linear-gradient(
-                0deg,
-                transparent,
-                transparent 2px,
-                rgba(0,0,0,0.1) 2px,
-                rgba(0,0,0,0.1) 4px
-            );
-            pointer-events: none;
-            z-index: 1;
-            opacity: 0.5;
-        }
-
-        .terminal {
+        .container {
             position: relative;
-            z-index: 2;
-            width: 90%;
-            max-width: 780px;
-            height: 78vh;
-            background: var(--term-bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            box-shadow: 0 12px 40px rgba(80, 0, 120, 0.4);
-            display: flex;
-            flex-direction: column;
-            backdrop-filter: blur(6px);
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px;
         }
 
-        .titlebar {
-            background: linear-gradient(to bottom, #241238, #1a0d28);
-            padding: 6px 10px;
-            border-bottom: 1px solid var(--border);
+        h1 {
+            text-align: center;
+            color: #a040e0;
+            margin-bottom: 10px;
+            text-shadow: 0 0 15px rgba(160, 64, 224, 0.5);
+        }
+
+        .status {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        .status.loading { color: #f0a030; }
+        .status.ready { color: #40e070; }
+        .status.error { color: #f04050; }
+
+        .panel {
+            background: rgba(10, 0, 20, 0.9);
+            border: 1px solid #2a1050;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            background: linear-gradient(to bottom, #1a0830, #120620);
+            padding: 10px 15px;
+            border-bottom: 1px solid #2a1050;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-radius: 7px 7px 0 0;
-            font-size: 13px;
         }
 
-        .titlebar-left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--dim);
+        .panel-title {
+            color: #a040e0;
+            font-size: 14px;
         }
 
-        .titlebar-left svg {
-            width: 14px;
-            height: 14px;
-            fill: var(--purple);
+        .btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 5px;
+            font-family: inherit;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
         }
 
-        .wm-buttons {
-            display: flex;
-            gap: 4px;
+        .btn-run {
+            background: #1a4025;
+            color: #40e070;
+            border: 1px solid #2a6035;
+        }
+        .btn-run:hover:not(:disabled) { background: #2a5535; }
+        .btn-run:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .btn-clear {
+            background: #301030;
+            color: #c080c0;
+            border: 1px solid #502050;
+        }
+        .btn-clear:hover { background: #402040; }
+
+        .btn-example {
+            background: #102040;
+            color: #6090d0;
+            border: 1px solid #203060;
+            margin-right: 8px;
+        }
+        .btn-example:hover { background: #203050; }
+
+        #editor {
+            width: 100%;
+            height: 280px;
+            background: #050010;
+            color: #e0e0e0;
+            border: none;
+            padding: 15px;
+            font-family: inherit;
+            font-size: 14px;
+            line-height: 1.5;
+            resize: vertical;
+            outline: none;
         }
 
-        .wm-btn {
-            width: 26px;
-            height: 20px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 4px;
-            color: var(--dim);
-            font-size: 11px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: default;
-        }
-
-        .wm-btn:hover { background: rgba(178, 74, 255, 0.2); }
-        .wm-btn.x:hover { background: rgba(255, 34, 102, 0.3); }
-
-        .content {
-            flex: 1;
-            padding: 18px;
+        #output {
+            min-height: 150px;
+            max-height: 300px;
             overflow-y: auto;
-            font-size: 15px;
-            line-height: 1.55;
-        }
-
-        .content::-webkit-scrollbar { width: 5px; }
-        .content::-webkit-scrollbar-track { background: transparent; }
-        .content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-
-        .ps1 { color: var(--red); }
-        .dir { color: var(--purple); }
-        .cmd { color: #fff; }
-
-        .block {
-            margin-bottom: 16px;
-            animation: fadein 0.35s ease;
-        }
-
-        @keyframes fadein {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: 115px 1fr;
-            gap: 6px;
-            margin-top: 6px;
-        }
-
-        .lbl { color: var(--purple); }
-
-        a {
-            color: var(--red);
-            text-decoration: none;
-            border-bottom: 1px dashed;
-        }
-        a:hover {
-            background: var(--red);
-            color: #000;
-        }
-
-        .tag {
-            display: inline-block;
-            padding: 1px 7px;
-            border: 1px solid;
-            border-radius: 3px;
+            padding: 15px;
+            background: #030008;
             font-size: 13px;
-            margin: 2px 3px 2px 0;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-break: break-all;
         }
 
-        .caret {
-            display: inline-block;
-            width: 8px;
-            height: 15px;
-            background: var(--purple);
-            vertical-align: text-bottom;
-            animation: blink 1s steps(1) infinite;
+        #output::-webkit-scrollbar { width: 6px; }
+        #output::-webkit-scrollbar-track { background: #0a0015; }
+        #output::-webkit-scrollbar-thumb { background: #2a1050; border-radius: 3px; }
+
+        .out-line { margin: 2px 0; }
+        .out-stdout { color: #d0d0d0; }
+        .out-stderr { color: #f06070; }
+        .out-result { color: #40e070; }
+        .out-info { color: #6090d0; }
+
+        .examples {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
         }
 
-        @keyframes blink {
-            50% { opacity: 0; }
+        .info-box {
+            background: rgba(40, 20, 60, 0.5);
+            border: 1px solid #3a1860;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .info-box code {
+            background: #1a0830;
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: #c080e0;
         }
 
         @media (max-width: 600px) {
-            .grid { grid-template-columns: 1fr; }
-            .content { font-size: 14px; }
+            #editor { height: 200px; }
+            .examples { flex-direction: column; }
         }
     </style>
 </head>
 <body>
 
-<canvas id="bg"></canvas>
-<div class="noise"></div>
+<canvas id="matrix"></canvas>
 
-<div class="terminal">
-    <div class="titlebar">
-        <div class="titlebar-left">
-            <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8h16v10z"/></svg>
-            <span>siright@endeavouros:~/portfolio</span>
-        </div>
-        <div class="wm-buttons">
-            <div class="wm-btn">−</div>
-            <div class="wm-btn">◻</div>
-            <div class="wm-btn x">✕</div>
-        </div>
+<div class="container">
+    <h1>🐍 Python in Browser</h1>
+    <div class="status loading" id="status">⏳ Loading Pyodide...</div>
+
+    <div class="info-box">
+        Python работает прямо в браузере через <code>WebAssembly</code>. 
+        Поддерживается стандартная библиотека + <code>numpy</code>, <code>pandas</code>, <code>matplotlib</code> и другие.
+        Первая загрузка ~10 МБ, потом кешируется.
     </div>
-    <div class="content" id="out"></div>
+
+    <div class="examples">
+        <button class="btn btn-example" data-code="hello">Hello World</button>
+        <button class="btn btn-example" data-code="math">Math</button>
+        <button class="btn btn-example" data-code="loops">Loops</button>
+        <button class="btn btn-example" data-code="numpy">NumPy</button>
+        <button class="btn btn-example" data-code="fetch">HTTP Request</button>
+    </div>
+
+    <div class="panel">
+        <div class="panel-header">
+            <span class="panel-title">📝 Python Code</span>
+            <button class="btn btn-run" id="runBtn" disabled>▶ Run</button>
+        </div>
+        <textarea id="editor" spellcheck="false">
+# Напиши свой Python код здесь
+print("Hello from Python!")
+
+for i in range(5):
+    print(f"Number: {i}")
+
+import sys
+print(f"Python version: {sys.version}")
+</textarea>
+    </div>
+
+    <div class="panel">
+        <div class="panel-header">
+            <span class="panel-title">💻 Output</span>
+            <button class="btn btn-clear" id="clearBtn">Clear</button>
+        </div>
+        <div id="output"></div>
+    </div>
 </div>
 
 <script>
-var canvas = document.getElementById('bg');
+// Matrix background
+var canvas = document.getElementById('matrix');
 var ctx = canvas.getContext('2d');
 var W, H, cols, drops;
 
-function resize() {
+function initMatrix() {
     W = canvas.width = innerWidth;
     H = canvas.height = innerHeight;
-    cols = Math.floor(W / 22);
+    cols = Math.floor(W / 20);
     drops = [];
     for (var i = 0; i < cols; i++) drops[i] = Math.random() * -50;
 }
-resize();
-addEventListener('resize', resize);
+initMatrix();
+addEventListener('resize', initMatrix);
 
 var tick = 0;
-
-function render() {
-    ctx.fillStyle = 'rgba(21, 8, 34, 0.035)';
+function drawMatrix() {
+    ctx.fillStyle = 'rgba(13, 0, 24, 0.05)';
     ctx.fillRect(0, 0, W, H);
-    ctx.font = '17px monospace';
+    ctx.font = '15px monospace';
 
     for (var i = 0; i < cols; i++) {
-        var ch = String(Math.floor(Math.random() * 10));
-        var x = i * 22;
-        var y = drops[i] * 20;
-
-        var hue = 280 + Math.sin(tick * 0.003 + i * 0.15) * 40;
-        ctx.fillStyle = 'hsl(' + hue + ', 100%, 60%)';
-        ctx.fillText(ch, x, y);
+        var x = i * 20;
+        var y = drops[i] * 18;
+        var hue = 280 + Math.sin(tick * 0.003 + i * 0.12) * 30;
+        ctx.fillStyle = 'hsl(' + hue + ', 70%, 50%)';
+        ctx.fillText(String(Math.floor(Math.random() * 10)), x, y);
 
         if (y > H && Math.random() > 0.99) drops[i] = 0;
-        else drops[i] += 0.15;
+        else drops[i] += 0.12;
     }
     tick++;
-    requestAnimationFrame(render);
+    requestAnimationFrame(drawMatrix);
 }
-render();
+drawMatrix();
+</script>
 
-var out = document.getElementById('out');
-var lines = [
-    { c: './whoami.sh', o: '<div class="grid"><span class="lbl">Имя:</span><span>Роман</span><span class="lbl">Псевдоним:</span><span>Siri_Lv // Siright</span><span class="lbl">OS:</span><span style="color:#0df">EndeavourOS</span> (Arch-based)</div>' },
-    { c: 'cat skills.txt', o: '<div style="margin-top:5px"><span class="lbl">Языки:</span><br><span class="tag" style="border-color:#3776ab;color:#3776ab">Python (Main)</span><span class="tag" style="border-color:#00599C;color:#00599C">C++</span><span class="tag" style="border-color:#f89820;color:#f89820">Java</span><span class="tag" style="border-color:#5566aa;color:#aaf">Lua</span><span class="tag" style="border-color:#68217A;color:#dcb3ff">C#</span></div><div style="margin-top:10px"><span class="lbl">Движки:</span> Godot Engine<br><span class="lbl">Инфраструктура:</span> 3 сервера (2x <span style="color:#fc0">DE</span>, 1x <span style="color:#4488ff">UK</span>)</div>' },
-    { c: 'ls -la ./projects/', o: '<table style="width:100%;margin-top:5px"><tr><td style="padding:4px 0"><a href="https://t.me/Siright_Bot" target="_blank">Ai Telegram Bot</a></td><td style="color:var(--dim)">[Telegram Bot]</td></tr><tr><td style="padding:4px 0">Api Keys Parser</td><td style="color:var(--dim)">[Github/Web Scanner]</td></tr><tr><td style="padding:4px 0"><a href="https://pypi.org/project/ekogram" target="_blank">ekogram</a></td><td style="color:var(--dim)">[Python PyPI Module]</td></tr><tr><td style="padding:4px 0">Godot Games</td><td style="color:var(--dim)">[GameDev]</td></tr></table>' },
-    { c: '', o: '' }
-];
+<!-- Pyodide -->
+<script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
 
-function prompt() {
-    return '<span class="ps1">[siright@endeavouros]</span> <span class="dir">~</span>$ ';
+<script>
+var editor = document.getElementById('editor');
+var output = document.getElementById('output');
+var runBtn = document.getElementById('runBtn');
+var clearBtn = document.getElementById('clearBtn');
+var status = document.getElementById('status');
+var pyodide = null;
+
+var examples = {
+    hello: 'print("Hello, World!")\nprint("Python is awesome!")',
+    math: 'import math\n\nprint(f"Pi = {math.pi}")\nprint(f"E = {math.e}")\nprint(f"sqrt(2) = {math.sqrt(2)}")\nprint(f"sin(45°) = {math.sin(math.radians(45)):.4f}")',
+    loops: 'numbers = [1, 2, 3, 4, 5]\n\nprint("Squares:")\nfor n in numbers:\n    print(f"  {n}² = {n**2}")\n\nprint("\\nList comprehension:")\nsquares = [x**2 for x in range(10)]\nprint(squares)',
+    numpy: 'import numpy as np\n\narr = np.array([1, 2, 3, 4, 5])\nprint(f"Array: {arr}")\nprint(f"Mean: {arr.mean()}")\nprint(f"Sum: {arr.sum()}")\n\nmatrix = np.random.rand(3, 3)\nprint(f"\\nRandom 3x3 matrix:\\n{matrix}")',
+    fetch: 'from pyodide.http import pyfetch\nimport asyncio\n\nasync def get_ip():\n    response = await pyfetch("https://api.ipify.org?format=json")\n    data = await response.json()\n    print(f"Your IP: {data[\'ip\']}")\n\nawait get_ip()'
+};
+
+function log(text, type) {
+    var line = document.createElement('div');
+    line.className = 'out-line out-' + (type || 'stdout');
+    line.textContent = text;
+    output.appendChild(line);
+    output.scrollTop = output.scrollHeight;
 }
 
-function sleep(ms) {
-    return new Promise(function(r) { setTimeout(r, ms); });
-}
+async function initPyodide() {
+    try {
+        pyodide = await loadPyodide();
+        
+        // Redirect stdout/stderr
+        pyodide.runPython(`
+import sys
+from io import StringIO
 
-async function type(str, el) {
-    for (var i = 0; i < str.length; i++) {
-        el.textContent += str[i];
-        await sleep(35 + Math.random() * 55);
+class OutputCapture:
+    def __init__(self, callback, stream_type):
+        self.callback = callback
+        self.stream_type = stream_type
+    def write(self, text):
+        if text.strip():
+            self.callback(text, self.stream_type)
+    def flush(self):
+        pass
+`);
+        
+        status.textContent = '✓ Ready to run Python';
+        status.className = 'status ready';
+        runBtn.disabled = false;
+        
+    } catch (err) {
+        status.textContent = '✕ Failed to load: ' + err.message;
+        status.className = 'status error';
     }
 }
 
-async function main() {
-    for (var i = 0; i < lines.length; i++) {
-        var row = document.createElement('div');
-        row.innerHTML = prompt();
-        var cmd = document.createElement('span');
-        cmd.className = 'cmd';
-        row.appendChild(cmd);
-        var cur = document.createElement('span');
-        cur.className = 'caret';
-        row.appendChild(cur);
-        out.appendChild(row);
-        out.scrollTop = out.scrollHeight;
+async function runCode() {
+    var code = editor.value;
+    runBtn.disabled = true;
+    runBtn.textContent = '⏳ Running...';
+    
+    log('>>> Running...', 'info');
 
-        if (lines[i].c) {
-            await type(lines[i].c, cmd);
-            await sleep(200);
-            cur.remove();
-            var blk = document.createElement('div');
-            blk.className = 'block';
-            blk.innerHTML = lines[i].o;
-            out.appendChild(blk);
-            await sleep(450);
+    try {
+        // Setup output capture
+        pyodide.globals.set('js_log', log);
+        pyodide.runPython(`
+import sys
+sys.stdout = OutputCapture(js_log, 'stdout')
+sys.stderr = OutputCapture(js_log, 'stderr')
+`);
+
+        // Load packages if needed
+        await pyodide.loadPackagesFromImports(code);
+        
+        // Run code
+        var result = await pyodide.runPythonAsync(code);
+        
+        if (result !== undefined && result !== null) {
+            log('=> ' + String(result), 'result');
         }
-        out.scrollTop = out.scrollHeight;
+        
+        log('>>> Done', 'info');
+        
+    } catch (err) {
+        log(err.message, 'stderr');
     }
+
+    runBtn.disabled = false;
+    runBtn.textContent = '▶ Run';
 }
 
-setTimeout(main, 700);
+clearBtn.onclick = function() {
+    output.innerHTML = '';
+};
+
+runBtn.onclick = runCode;
+
+// Ctrl+Enter to run
+editor.onkeydown = function(e) {
+    if (e.ctrlKey && e.key === 'Enter') {
+        e.preventDefault();
+        runCode();
+    }
+};
+
+// Example buttons
+document.querySelectorAll('.btn-example').forEach(function(btn) {
+    btn.onclick = function() {
+        var key = btn.dataset.code;
+        if (examples[key]) {
+            editor.value = examples[key];
+        }
+    };
+});
+
+initPyodide();
 </script>
 
 </body>
