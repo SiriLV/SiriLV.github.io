@@ -6,12 +6,13 @@
     <title>Siri_Lv | Siright - Developer Portfolio</title>
     <style>
         :root {
-            --bg-color: #050005;
-            --term-bg: rgba(20, 0, 20, 0.85);
+            --bg-color: #1a0a2e;
+            --term-bg: rgba(18, 8, 32, 0.92);
             --primary: #bd00ff;
             --secondary: #ff0055;
             --text-main: #eaeaea;
-            --text-dim: #888;
+            --text-dim: #777;
+            --accent: #2d1b4e;
             --font-stack: 'Courier New', Courier, monospace;
         }
 
@@ -50,13 +51,13 @@
                 to bottom,
                 rgba(255,255,255,0),
                 rgba(255,255,255,0) 50%,
-                rgba(0,0,0,0.2) 50%,
-                rgba(0,0,0,0.2)
+                rgba(0,0,0,0.15) 50%,
+                rgba(0,0,0,0.15)
             );
             background-size: 100% 4px;
             z-index: 2;
             pointer-events: none;
-            opacity: 0.6;
+            opacity: 0.4;
         }
 
         .terminal-window {
@@ -66,141 +67,161 @@
             max-width: 800px;
             height: 80vh;
             background: var(--term-bg);
-            border: 2px solid var(--primary);
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(189, 0, 255, 0.3), inset 0 0 50px rgba(0,0,0,0.5);
+            border: 1px solid var(--accent);
+            border-radius: 6px;
+            box-shadow: 0 8px 32px rgba(100, 0, 180, 0.25), inset 0 0 60px rgba(0,0,0,0.4);
             display: flex;
             flex-direction: column;
-            backdrop-filter: blur(5px);
-            animation: fadeIn 1s ease-out;
+            backdrop-filter: blur(8px);
+            animation: terminalOpen 0.6s ease-out;
         }
 
         .terminal-header {
-            background: linear-gradient(90deg, rgba(189,0,255,0.2), rgba(255,0,85,0.2));
-            padding: 10px 15px;
-            border-bottom: 1px solid var(--primary);
+            background: linear-gradient(180deg, #2a1840 0%, #1e1030 100%);
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--accent);
             display: flex;
             align-items: center;
-            border-radius: 8px 8px 0 0;
+            justify-content: space-between;
+            border-radius: 5px 5px 0 0;
         }
 
-        .dots {
+        .header-title {
             display: flex;
+            align-items: center;
             gap: 8px;
-            margin-right: 15px;
+            font-size: 13px;
+            color: var(--text-dim);
         }
 
-        .dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
+        .header-title::before {
+            content: "≡";
+            font-size: 16px;
+            color: var(--primary);
         }
 
-        .dot.red { background: #ff5f56; }
-        .dot.yellow { background: #ffbd2e; }
-        .dot.green { background: #27c93f; }
+        .window-controls {
+            display: flex;
+            gap: 6px;
+        }
 
-        .title {
-            font-size: 14px;
-            color: var(--text-main);
-            font-weight: bold;
-            opacity: 0.8;
+        .window-btn {
+            width: 28px;
+            height: 22px;
+            background: var(--accent);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: var(--text-dim);
+            cursor: default;
+            transition: background 0.2s;
+        }
+
+        .window-btn:hover {
+            background: rgba(189, 0, 255, 0.3);
+        }
+
+        .window-btn.close:hover {
+            background: rgba(255, 0, 85, 0.4);
         }
 
         .terminal-body {
             padding: 20px;
             overflow-y: auto;
             flex-grow: 1;
-            font-size: 16px;
-            line-height: 1.5;
+            font-size: 15px;
+            line-height: 1.6;
         }
 
         .terminal-body::-webkit-scrollbar {
-            width: 8px;
+            width: 6px;
         }
         .terminal-body::-webkit-scrollbar-track {
-            background: rgba(0,0,0,0.3);
+            background: rgba(0,0,0,0.2);
         }
         .terminal-body::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 3px;
+        }
+        .terminal-body::-webkit-scrollbar-thumb:hover {
             background: var(--primary);
-            border-radius: 4px;
         }
 
         .prompt {
             color: var(--secondary);
-            font-weight: bold;
         }
         .path {
             color: var(--primary);
-            font-weight: bold;
         }
         .command {
             color: #fff;
         }
 
         .output {
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             opacity: 0;
-            animation: textFadeIn 0.5s forwards;
+            animation: showOutput 0.4s forwards;
         }
 
         .info-grid {
             display: grid;
-            grid-template-columns: 120px 1fr;
-            gap: 10px;
-            margin-top: 10px;
+            grid-template-columns: 130px 1fr;
+            gap: 8px;
+            margin-top: 8px;
         }
 
         .label {
             color: var(--primary);
-            font-weight: bold;
         }
 
         a {
             color: var(--secondary);
             text-decoration: none;
             border-bottom: 1px dashed var(--secondary);
-            transition: all 0.3s;
+            transition: all 0.2s;
         }
 
         a:hover {
             background: var(--secondary);
             color: #000;
-            box-shadow: 0 0 10px var(--secondary);
+            box-shadow: 0 0 8px var(--secondary);
         }
 
         .lang-tag {
             display: inline-block;
-            padding: 2px 6px;
-            border: 1px solid var(--primary);
-            border-radius: 4px;
-            font-size: 0.8em;
-            margin-right: 5px;
-            color: var(--text-main);
+            padding: 2px 8px;
+            border: 1px solid;
+            border-radius: 3px;
+            font-size: 0.85em;
+            margin: 2px 4px 2px 0;
         }
 
         .cursor {
             display: inline-block;
-            width: 10px;
-            height: 18px;
-            background-color: var(--secondary);
-            animation: blink 1s step-end infinite;
-            vertical-align: middle;
+            width: 8px;
+            height: 16px;
+            background-color: var(--primary);
+            animation: cursorBlink 1.1s step-end infinite;
+            vertical-align: text-bottom;
+            margin-left: 2px;
         }
 
-        @keyframes blink {
+        @keyframes cursorBlink {
             0%, 100% { opacity: 1; }
             50% { opacity: 0; }
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
+        @keyframes terminalOpen {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes textFadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes showOutput {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         @media (max-width: 600px) {
@@ -208,8 +229,10 @@
                 grid-template-columns: 1fr;
             }
             .label {
-                margin-bottom: -5px;
-                display: block;
+                margin-bottom: -4px;
+            }
+            .terminal-body {
+                font-size: 14px;
             }
         }
     </style>
@@ -217,183 +240,186 @@
 <body>
 
     <canvas id="matrixCanvas"></canvas>
-    
     <div class="scanlines"></div>
 
     <div class="terminal-window">
         <div class="terminal-header">
-            <div class="dots">
-                <div class="dot red"></div>
-                <div class="dot yellow"></div>
-                <div class="dot green"></div>
+            <div class="header-title">
+                <span>siright@endeavouros: ~/portfolio</span>
             </div>
-            <div class="title">siright@endeavouros: ~/portfolio</div>
+            <div class="window-controls">
+                <div class="window-btn">─</div>
+                <div class="window-btn">□</div>
+                <div class="window-btn close">✕</div>
+            </div>
         </div>
-        <div class="terminal-body" id="terminalContent">
-        </div>
+        <div class="terminal-body" id="terminalContent"></div>
     </div>
 
     <script>
-        const canvas = document.getElementById('matrixCanvas');
-        const ctx = canvas.getContext('2d');
+        (function() {
+            const canvas = document.getElementById('matrixCanvas');
+            const ctx = canvas.getContext('2d');
 
-        let width = canvas.width = window.innerWidth;
-        let height = canvas.height = window.innerHeight;
+            let w = canvas.width = window.innerWidth;
+            let h = canvas.height = window.innerHeight;
 
-        const cols = Math.floor(width / 20) + 1;
-        const ypos = Array(cols).fill(0);
+            const fontSize = 18;
+            const columns = Math.floor(w / fontSize);
+            const drops = [];
 
-        window.addEventListener('resize', () => {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-        });
-
-        function matrix() {
-            ctx.fillStyle = 'rgba(5, 0, 5, 0.05)'; 
-            ctx.fillRect(0, 0, width, height);
-
-            ctx.font = '15pt monospace';
-
-            ypos.forEach((y, ind) => {
-                const text = Math.floor(Math.random() * 10).toString();
-                
-                const isRed = Math.random() > 0.5;
-                ctx.fillStyle = isRed ? '#ff0055' : '#bd00ff';
-
-                const x = ind * 20;
-                ctx.fillText(text, x, y);
-
-                if (y > 100 + Math.random() * 10000) ypos[ind] = 0;
-                else ypos[ind] = y + 20;
-            });
-            
-            requestAnimationFrame(matrix);
-        }
-
-        requestAnimationFrame(matrix);
-
-        
-        const terminalContent = document.getElementById('terminalContent');
-
-        const data = [
-            {
-                cmd: './whoami.sh',
-                output: `
-                    <div class="info-grid">
-                        <span class="label">Имя:</span> <span>Роман</span>
-                        <span class="label">Псевдоним:</span> <span>Siri_Lv <span style="color:var(--text-dim)">//</span> Siright</span>
-                        <span class="label">OS:</span> <span style="color: #00ddff">EndeavourOS</span> (Arch-based)
-                    </div>
-                `
-            },
-            {
-                cmd: 'cat skills.txt',
-                output: `
-                    <div style="margin-top:5px">
-                        <span class="label">Языки:</span><br>
-                        <span class="lang-tag" style="border-color:#3776ab; color:#3776ab">Python (Main)</span>
-                        <span class="lang-tag" style="border-color:#00599C; color:#00599C">C++</span>
-                        <span class="lang-tag" style="border-color:#f89820; color:#f89820">Java</span>
-                        <span class="lang-tag" style="border-color:#000080; color:#aaaaff">Lua</span>
-                        <span class="lang-tag" style="border-color:#68217A; color:#dcb3ff">C#</span>
-                    </div>
-                    <div style="margin-top:10px">
-                        <span class="label">Движки:</span> Godot Engine<br>
-                        <span class="label">Инфраструктура:</span> 3 сервера (2x <span style="color:#ffcc00">DE</span>, 1x <span style="color:#00247d">UK</span>)
-                    </div>
-                `
-            },
-            {
-                cmd: 'ls -la ./projects/',
-                output: `
-                    <table style="width:100%; text-align:left; margin-top:5px; border-collapse: collapse;">
-                        <tr>
-                            <td style="padding: 4px 0;"><a href="https://t.me/Siright_Bot" target="_blank">Ai Telegram Bot</a></td>
-                            <td style="color:var(--text-dim)">[Telegram Bot]</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 4px 0;"><span style="color:var(--text-main)">Api Keys Parser</span></td>
-                            <td style="color:var(--text-dim)">[Github/Web Scanner]</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 4px 0;"><a href="https://pypi.org/project/ekogram" target="_blank">ekogram</a></td>
-                            <td style="color:var(--text-dim)">[Python PyPI Module]</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 4px 0;"><span style="color:var(--text-main)">Godot Games</span></td>
-                            <td style="color:var(--text-dim)">[GameDev]</td>
-                        </tr>
-                    </table>
-                `
-            },
-            {
-                cmd: '',
-                output: ''
+            for (let i = 0; i < columns; i++) {
+                drops[i] = Math.random() * -100;
             }
-        ];
 
-        let step = 0;
+            const colors = ['#bd00ff', '#9900cc', '#7700aa', '#ff0055', '#cc0044', '#aa0066'];
 
-        async function typeWriter(text, element) {
-            return new Promise(resolve => {
-                let i = 0;
-                element.innerHTML = '';
-                function type() {
-                    if (i < text.length) {
-                        element.innerHTML += text.charAt(i);
-                        i++;
-                        setTimeout(type, Math.random() * 50 + 30);
-                    } else {
-                        resolve();
+            function getColor(x, t) {
+                const idx = Math.floor((Math.sin(x * 0.1 + t * 0.0008) + 1) * 3) % colors.length;
+                return colors[idx];
+            }
+
+            let time = 0;
+
+            function draw() {
+                ctx.fillStyle = 'rgba(26, 10, 46, 0.04)';
+                ctx.fillRect(0, 0, w, h);
+
+                ctx.font = fontSize + 'px monospace';
+
+                for (let i = 0; i < drops.length; i++) {
+                    const char = String.fromCharCode(0x30 + Math.floor(Math.random() * 10));
+                    const x = i * fontSize;
+                    const y = drops[i] * fontSize;
+
+                    ctx.fillStyle = getColor(i, time);
+                    ctx.fillText(char, x, y);
+
+                    if (y > h && Math.random() > 0.985) {
+                        drops[i] = 0;
                     }
+                    drops[i] += 0.33;
                 }
-                type();
-            });
-        }
 
-        async function runTerminal() {
-            for (const item of data) {
-                const line = document.createElement('div');
-                line.style.marginBottom = '5px';
-                
-                const promptSpan = `<span class="prompt">[siright@endeavouros]</span> <span class="path">~</span>$ `;
-                
-                const cmdSpan = document.createElement('span');
-                cmdSpan.className = 'command';
-                
-                line.innerHTML = promptSpan;
-                line.appendChild(cmdSpan);
-                
-                const cursor = document.createElement('span');
-                cursor.className = 'cursor';
-                line.appendChild(cursor);
-                
-                terminalContent.appendChild(line);
-
-                terminalContent.scrollTop = terminalContent.scrollHeight;
-
-                if (item.cmd) {
-                    await typeWriter(item.cmd, cmdSpan);
-                    
-                    await new Promise(r => setTimeout(r, 300));
-                    
-                    cursor.remove();
-
-                    const outputDiv = document.createElement('div');
-                    outputDiv.className = 'output';
-                    outputDiv.innerHTML = item.output;
-                    terminalContent.appendChild(outputDiv);
-                    
-                    await new Promise(r => setTimeout(r, 600));
-                } else {
-                }
-                
-                terminalContent.scrollTop = terminalContent.scrollHeight;
+                time++;
+                requestAnimationFrame(draw);
             }
-        }
 
-        setTimeout(runTerminal, 1000);
+            window.addEventListener('resize', function() {
+                w = canvas.width = window.innerWidth;
+                h = canvas.height = window.innerHeight;
+            });
 
+            draw();
+        })();
+
+        (function() {
+            const content = document.getElementById('terminalContent');
+
+            const commands = [
+                {
+                    cmd: './whoami.sh',
+                    out: `
+                        <div class="info-grid">
+                            <span class="label">Имя:</span><span>Роман</span>
+                            <span class="label">Псевдоним:</span><span>Siri_Lv <span style="color:var(--text-dim)">//</span> Siright</span>
+                            <span class="label">OS:</span><span style="color:#00ddff">EndeavourOS</span> (Arch-based)
+                        </div>
+                    `
+                },
+                {
+                    cmd: 'cat skills.txt',
+                    out: `
+                        <div style="margin-top:6px">
+                            <span class="label">Языки:</span><br>
+                            <span class="lang-tag" style="border-color:#3776ab;color:#3776ab">Python (Main)</span>
+                            <span class="lang-tag" style="border-color:#00599C;color:#00599C">C++</span>
+                            <span class="lang-tag" style="border-color:#f89820;color:#f89820">Java</span>
+                            <span class="lang-tag" style="border-color:#000080;color:#aaf">Lua</span>
+                            <span class="lang-tag" style="border-color:#68217A;color:#dcb3ff">C#</span>
+                        </div>
+                        <div style="margin-top:12px">
+                            <span class="label">Движки:</span> Godot Engine<br>
+                            <span class="label">Инфраструктура:</span> 3 сервера (2x <span style="color:#fc0">DE</span>, 1x <span style="color:#00247d">UK</span>)
+                        </div>
+                    `
+                },
+                {
+                    cmd: 'ls -la ./projects/',
+                    out: `
+                        <table style="width:100%;text-align:left;margin-top:6px;border-collapse:collapse">
+                            <tr><td style="padding:5px 0"><a href="https://t.me/Siright_Bot" target="_blank">Ai Telegram Bot</a></td><td style="color:var(--text-dim)">[Telegram Bot]</td></tr>
+                            <tr><td style="padding:5px 0">Api Keys Parser</td><td style="color:var(--text-dim)">[Github/Web Scanner]</td></tr>
+                            <tr><td style="padding:5px 0"><a href="https://pypi.org/project/ekogram" target="_blank">ekogram</a></td><td style="color:var(--text-dim)">[Python PyPI Module]</td></tr>
+                            <tr><td style="padding:5px 0">Godot Games</td><td style="color:var(--text-dim)">[GameDev]</td></tr>
+                        </table>
+                    `
+                },
+                { cmd: '', out: '' }
+            ];
+
+            function delay(ms) {
+                return new Promise(function(r) { setTimeout(r, ms); });
+            }
+
+            async function typeText(text, el) {
+                for (let i = 0; i < text.length; i++) {
+                    el.textContent += text[i];
+                    await delay(40 + Math.random() * 60);
+                }
+            }
+
+            async function run() {
+                for (let i = 0; i < commands.length; i++) {
+                    const item = commands[i];
+
+                    const line = document.createElement('div');
+                    line.style.marginBottom = '6px';
+
+                    const prompt = document.createElement('span');
+                    prompt.className = 'prompt';
+                    prompt.textContent = '[siright@endeavouros]';
+
+                    const path = document.createElement('span');
+                    path.className = 'path';
+                    path.textContent = ' ~ ';
+
+                    const dollar = document.createTextNode('$ ');
+
+                    const cmd = document.createElement('span');
+                    cmd.className = 'command';
+
+                    const cursor = document.createElement('span');
+                    cursor.className = 'cursor';
+
+                    line.appendChild(prompt);
+                    line.appendChild(path);
+                    line.appendChild(dollar);
+                    line.appendChild(cmd);
+                    line.appendChild(cursor);
+
+                    content.appendChild(line);
+                    content.scrollTop = content.scrollHeight;
+
+                    if (item.cmd) {
+                        await typeText(item.cmd, cmd);
+                        await delay(250);
+                        cursor.remove();
+
+                        const output = document.createElement('div');
+                        output.className = 'output';
+                        output.innerHTML = item.out;
+                        content.appendChild(output);
+
+                        await delay(500);
+                    }
+
+                    content.scrollTop = content.scrollHeight;
+                }
+            }
+
+            setTimeout(run, 800);
+        })();
     </script>
 </body>
 </html>
