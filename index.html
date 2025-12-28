@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Siri_Lv | Siright - Developer Portfolio</title>
+    <title>siright@archlinux: ~</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
             --bg-color: #05000a;
-            --term-bg: rgba(13, 0, 26, 0.95);
-            --primary: #9d00ff;
-            --secondary: #ff0055;
-            --text-main: #f0f0f0;
-            --text-dim: #888;
-            --accent: #2d0a4e;
-            --font-stack: 'JetBrains Mono', 'Consolas', monospace;
+            --term-bg: rgba(10, 5, 16, 0.96);
+            --term-header: #1a1025;
+            --primary: #a347ff;
+            --secondary: #00f0ff;
+            --green: #27c93f;
+            --text-main: #e6e6e6;
+            --font-stack: 'JetBrains Mono', monospace;
         }
 
         * {
@@ -30,13 +30,11 @@
             background-color: var(--bg-color);
             color: var(--text-main);
             font-family: var(--font-stack);
-            font-weight: 500;
             overflow: hidden;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            position: relative;
         }
 
         canvas {
@@ -44,68 +42,45 @@
             top: 0;
             left: 0;
             z-index: 1;
-            opacity: 0.8;
-        }
-
-        .scanlines {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                to bottom,
-                rgba(255,255,255,0),
-                rgba(255,255,255,0) 50%,
-                rgba(0,0,0,0.2) 50%,
-                rgba(0,0,0,0.2)
-            );
-            background-size: 100% 4px;
-            z-index: 2;
-            pointer-events: none;
-            opacity: 0.3;
         }
 
         .terminal-window {
             position: relative;
-            z-index: 3;
-            width: 90%;
-            max-width: 850px;
-            height: 80vh;
+            z-index: 10;
+            width: 900px;
+            max-width: 95%;
+            height: 600px;
             background: var(--term-bg);
-            border: 1px solid #4a0080;
-            border-radius: 8px;
-            box-shadow: 0 0 20px rgba(130, 0, 255, 0.15), 0 10px 40px rgba(0,0,0,0.6);
+            border: 1px solid #452b63;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.8), 0 0 20px rgba(163, 71, 255, 0.1);
             display: flex;
             flex-direction: column;
-            backdrop-filter: blur(5px);
-            animation: terminalOpen 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            border-radius: 2px;
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .terminal-header {
-            background: linear-gradient(90deg, #1a052b 0%, #11021f 100%);
-            padding: 10px 15px;
-            border-bottom: 1px solid #4a0080;
+            background: var(--term-header);
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-radius: 7px 7px 0 0;
+            padding: 0 10px;
+            border-bottom: 1px solid #333;
             user-select: none;
         }
 
         .header-title {
+            font-size: 13px;
+            color: #aaa;
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 14px;
-            color: #ccc;
-            letter-spacing: 0.5px;
+            gap: 8px;
         }
-
-        .header-title::before {
-            content: ">_";
-            font-weight: 700;
+        
+        .term-icon {
             color: var(--primary);
+            font-weight: bold;
         }
 
         .window-controls {
@@ -113,334 +88,347 @@
             gap: 8px;
         }
 
-        .window-btn {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #333;
-            border: 1px solid rgba(255,255,255,0.1);
+        .win-btn {
+            width: 14px;
+            height: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #777;
+            font-size: 10px;
             cursor: pointer;
-            transition: 0.2s;
+            transition: color 0.2s;
         }
-
-        .btn-red { background: #ff5f56; }
-        .btn-yellow { background: #ffbd2e; }
-        .btn-green { background: #27c93f; }
-
-        .btn-red:hover { background: #ff3b30; box-shadow: 0 0 5px #ff3b30; }
+        .win-btn:hover { color: #fff; }
+        .win-btn.close:hover { color: #ff4444; }
 
         .terminal-body {
-            padding: 25px;
-            overflow-y: auto;
             flex-grow: 1;
-            font-size: 16px;
+            padding: 15px;
+            overflow-y: auto;
+            font-size: 15px;
             line-height: 1.5;
+            cursor: text;
         }
 
-        .terminal-body::-webkit-scrollbar {
-            width: 8px;
-        }
-        .terminal-body::-webkit-scrollbar-track {
-            background: #0a0014;
-        }
-        .terminal-body::-webkit-scrollbar-thumb {
-            background: #4a0080;
-            border-radius: 4px;
-        }
-        .terminal-body::-webkit-scrollbar-thumb:hover {
-            background: var(--primary);
-        }
+        .terminal-body::-webkit-scrollbar { width: 10px; }
+        .terminal-body::-webkit-scrollbar-track { background: #0f0f15; }
+        .terminal-body::-webkit-scrollbar-thumb { background: #333; border: 1px solid #0f0f15; }
+        .terminal-body::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
-        .prompt {
-            color: var(--secondary);
-            font-weight: 700;
+        .line { margin-bottom: 4px; word-break: break-word; }
+        .prompt { color: var(--green); font-weight: 700; }
+        .path { color: #5fd7ff; font-weight: 700; }
+        .separator { color: #fff; }
+        
+        #input-line {
+            display: flex;
+            align-items: center;
         }
-        .path {
-            color: var(--primary);
-            font-weight: 700;
-        }
-        .command {
+        #cmd-input {
+            background: transparent;
+            border: none;
             color: #fff;
-            font-weight: 700;
-            text-shadow: 0 0 2px rgba(255,255,255,0.2);
-        }
-
-        .output {
-            margin-bottom: 20px;
-            opacity: 0;
-            animation: showOutput 0.3s forwards;
-            color: #dcdcdc;
-        }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: 140px 1fr;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .label {
-            color: var(--primary);
+            font-family: var(--font-stack);
+            font-size: 15px;
+            flex-grow: 1;
+            outline: none;
+            caret-color: var(--primary);
+            margin-left: 8px;
             font-weight: 700;
         }
 
-        a {
-            color: var(--secondary);
-            text-decoration: none;
-            border-bottom: 1px dashed var(--secondary);
-            transition: all 0.2s;
-            position: relative;
+        pre {
+            font-family: var(--font-stack);
+            white-space: pre-wrap;
+            line-height: 1.3;
+            margin: 10px 0;
+            color: var(--text-main);
         }
 
-        a:hover {
-            background: var(--secondary);
-            color: #000;
-            box-shadow: 0 0 10px var(--secondary);
+        .arch-logo {
+            color: #1793d1;
+            font-weight: bold;
+            float: left;
+            margin-right: 20px;
         }
 
-        .lang-tag {
+        .fetch-info {
             display: inline-block;
-            padding: 3px 8px;
-            border: 1px solid;
-            border-radius: 4px;
-            font-size: 0.9em;
-            margin: 4px 6px 4px 0;
-            font-weight: 500;
-            background: rgba(255,255,255,0.03);
+            vertical-align: top;
+            margin-top: 5px;
         }
 
-        .cursor {
-            display: inline-block;
-            width: 10px;
-            height: 19px;
-            background-color: var(--primary);
-            animation: cursorBlink 1s step-end infinite;
-            vertical-align: text-bottom;
-            margin-left: 2px;
-        }
+        .fetch-label { color: var(--primary); font-weight: bold; }
+        .fetch-val { color: #fff; }
 
-        @keyframes cursorBlink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
+        a { color: var(--secondary); text-decoration: none; border-bottom: 1px dashed var(--secondary); }
+        a:hover { background: var(--secondary); color: #000; }
 
-        @keyframes terminalOpen {
-            from { opacity: 0; transform: scale(0.95) translateY(20px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
-
-        @keyframes showOutput {
-            from { opacity: 0; transform: translateX(-5px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        @media (max-width: 600px) {
-            .info-grid {
-                grid-template-columns: 1fr;
-            }
-            .label {
-                display: block;
-                margin-top: 5px;
-            }
-            .terminal-body {
-                font-size: 14px;
-                padding: 15px;
-            }
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
         }
     </style>
 </head>
 <body>
 
-    <canvas id="matrixCanvas"></canvas>
-    <div class="scanlines"></div>
+    <canvas id="matrix"></canvas>
 
-    <div class="terminal-window">
+    <div class="terminal-window" onclick="document.getElementById('cmd-input').focus()">
         <div class="terminal-header">
             <div class="header-title">
-                <span>siright@endeavouros: ~/portfolio</span>
+                <span class="term-icon">/></span>
+                <span>siright@archlinux: ~</span>
             </div>
             <div class="window-controls">
-                <div class="window-btn btn-yellow"></div>
-                <div class="window-btn btn-green"></div>
-                <div class="window-btn btn-red close"></div>
+                <div class="win-btn">_</div>
+                <div class="win-btn">□</div>
+                <div class="win-btn close">✕</div>
             </div>
         </div>
-        <div class="terminal-body" id="terminalContent"></div>
+        <div class="terminal-body" id="output">
+            <div id="history"></div>
+            
+            <div id="input-line">
+                <span class="prompt">[siright@archlinux]</span>
+                <span class="path">~</span>
+                <span class="separator">$</span>
+                <input type="text" id="cmd-input" autocomplete="off" spellcheck="false">
+            </div>
+        </div>
     </div>
 
     <script>
-        (function() {
-            const canvas = document.getElementById('matrixCanvas');
-            const ctx = canvas.getContext('2d');
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
 
-            let w = canvas.width = window.innerWidth;
-            let h = canvas.height = window.innerHeight;
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
 
-            const fontSize = 20;
-            const columns = Math.floor(w / fontSize);
-            const drops = [];
+        const fontSize = 16;
+        const columns = Math.floor(width / fontSize);
+        const drops = [];
 
-            for (let i = 0; i < columns; i++) {
-                drops[i] = Math.random() * -100;
-            }
+        for (let i = 0; i < columns; i++) {
+            drops[i] = Math.random() * -100;
+        }
 
-            const colors = ['#0f0', '#00ff41', '#20c20e', '#008f11'];
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(5, 0, 10, 0.25)'; 
+            ctx.fillRect(0, 0, width, height);
 
-            function draw() {
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.08)'; 
-                ctx.fillRect(0, 0, w, h);
+            ctx.font = 'bold ' + fontSize + 'px "JetBrains Mono"';
+            
+            for (let i = 0; i < drops.length; i++) {
+                const text = Math.random() > 0.5 ? '1' : '0';
+                
+                ctx.fillStyle = '#0f0';
+                
+                const x = i * fontSize;
+                const y = drops[i] * fontSize;
 
-                ctx.font = 'bold ' + fontSize + 'px "JetBrains Mono", monospace';
+                ctx.fillText(text, x, y);
 
-                for (let i = 0; i < drops.length; i++) {
-                    const chars = "01010123456789ABCDEF";
-                    const char = chars[Math.floor(Math.random() * chars.length)];
-                    
-                    const x = i * fontSize;
-                    const y = drops[i] * fontSize;
-
-                    const colorIdx = Math.floor(Math.random() * colors.length);
-                    ctx.fillStyle = colors[colorIdx];
-                    
-                    ctx.fillText(char, x, y);
-                    if (y > h && Math.random() > 0.99) {
-                        drops[i] = 0;
-                    }
-                    
-                    drops[i] += 0.15; 
+                if (y > height && Math.random() > 0.985) {
+                    drops[i] = 0;
                 }
 
-                requestAnimationFrame(draw);
+                drops[i] += 0.35; 
             }
+            requestAnimationFrame(drawMatrix);
+        }
 
-            window.addEventListener('resize', function() {
-                w = canvas.width = window.innerWidth;
-                h = canvas.height = window.innerHeight;
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        drawMatrix();
+
+        const input = document.getElementById('cmd-input');
+        const historyDiv = document.getElementById('history');
+        const terminalBody = document.querySelector('.terminal-body');
+
+        const commandHistory = [];
+        let historyIndex = -1;
+
+        window.onload = async () => {
+            await typeWriter('Welcome to Siright OS. Type "help" for commands.', 'line', 20);
+            input.focus();
+        };
+
+        // Обработка ввода
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const cmd = this.value.trim();
+                if (cmd) {
+                    addToHistory(cmd);
+                    processCommand(cmd);
+                    commandHistory.push(cmd);
+                    historyIndex = commandHistory.length;
+                } else {
+                    addToHistory('');
+                }
+                this.value = '';
+                scrollToBottom();
+            } else if (e.key === 'ArrowUp') {
+                if (historyIndex > 0) {
+                    historyIndex--;
+                    this.value = commandHistory[historyIndex];
+                }
+                e.preventDefault();
+            } else if (e.key === 'ArrowDown') {
+                if (historyIndex < commandHistory.length - 1) {
+                    historyIndex++;
+                    this.value = commandHistory[historyIndex];
+                } else {
+                    historyIndex = commandHistory.length;
+                    this.value = '';
+                }
+            }
+        });
+
+        function addToHistory(cmd) {
+            const line = document.createElement('div');
+            line.className = 'line';
+            line.innerHTML = `
+                <span class="prompt">[siright@archlinux]</span>
+                <span class="path">~</span>
+                <span class="separator">$</span>
+                <span>${escapeHtml(cmd)}</span>
+            `;
+            historyDiv.appendChild(line);
+        }
+
+        function printOutput(html) {
+            const div = document.createElement('div');
+            div.className = 'line';
+            div.style.color = '#ccc';
+            div.innerHTML = html;
+            historyDiv.appendChild(div);
+            scrollToBottom();
+        }
+
+        function scrollToBottom() {
+            terminalBody.scrollTop = terminalBody.scrollHeight;
+        }
+
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        async function processCommand(rawCmd) {
+            const args = rawCmd.split(' ');
+            const cmd = args[0].toLowerCase();
+
+            switch(cmd) {
+                case 'help':
+                    printOutput(`
+                        <span style="color:var(--primary)">Available commands:</span><br>
+                        - <span style="color:var(--secondary)">neofetch</span> : System information<br>
+                        - <span style="color:var(--secondary)">ls</span>       : List projects<br>
+                        - <span style="color:var(--secondary)">whoami</span>   : About me<br>
+                        - <span style="color:var(--secondary)">nano</span>     : [Easter Egg]<br>
+                        - <span style="color:var(--secondary)">siri</span>     : [Easter Egg]<br>
+                        - <span style="color:var(--secondary)">clear</span>    : Clear terminal
+                    `);
+                    break;
+
+                case 'clear':
+                    historyDiv.innerHTML = '';
+                    break;
+
+                case 'neofetch':
+                    const logo = `
+<span class="arch-logo">
+       /\\
+      /  \\
+     /    \\
+    /      \\
+   /   ,,   \\
+  /   |  |   \\
+ /_-''    ''-_\\
+</span>`;
+                    const info = `
+<div class="fetch-info">
+    <span class="fetch-label">siright@archlinux</span><br>
+    -----------------<br>
+    <span class="fetch-label">OS</span>: <span class="fetch-val">Arch Linux x86_64</span><br>
+    <span class="fetch-label">Host</span>: <span class="fetch-val">Siright Portfolio</span><br>
+    <span class="fetch-label">Kernel</span>: <span class="fetch-val">6.6.9-arch1-1</span><br>
+    <span class="fetch-label">Uptime</span>: <span class="fetch-val">Forever</span><br>
+    <span class="fetch-label">Shell</span>: <span class="fetch-val">zsh 5.9</span><br>
+    <span class="fetch-label">Resolution</span>: <span class="fetch-val">1920x1080</span><br>
+    <span class="fetch-label">WM</span>: <span class="fetch-val">Hyprland</span><br>
+    <span class="fetch-label">Theme</span>: <span class="fetch-val">Endeavour-Purple</span><br>
+    <span class="fetch-label">CPU</span>: <span class="fetch-val">AMD Ryzen 7 5800X (16) @ 3.8GHz</span><br>
+    <span class="fetch-label">GPU</span>: <span class="fetch-val">NVIDIA GeForce RTX 3070</span><br>
+    <span class="fetch-label">Memory</span>: <span class="fetch-val">32GiB</span>
+</div>
+<div style="clear:both"></div>
+                    `;
+                    printOutput(logo + info);
+                    break;
+
+                case 'nano':
+                    printOutput(`<span style="color:#ffcc00">OnlySQ =></span>`);
+                    break;
+
+                case 'siri':
+                    printOutput(`<span style="color:#ff79c6">is very cool =]</span>`);
+                    break;
+
+                case 'whoami':
+                    printOutput(`
+                        User: <span style="color:var(--primary)">Siri_Lv</span> (Siright)<br>
+                        Role: <span style="color:var(--secondary)">Backend Developer</span><br>
+                        Stack: Python, C++, Godot, Linux
+                    `);
+                    break;
+
+                case 'ls':
+                    printOutput(`
+                        drwx------  <a href="https://t.me/Siright_Bot" target="_blank">Ai_Bot_Telegram</a><br>
+                        -rwx------  <a href="#">Api_Keys_Parser.py</a><br>
+                        -rwx------  <a href="https://pypi.org/project/ekogram" target="_blank">ekogram_lib</a><br>
+                        drwx------  <a href="#">Godot_Projects</a>
+                    `);
+                    break;
+
+                case 'sudo':
+                    printOutput(`[sudo] password for siright: <span style="color:red">Sorry, try again.</span>`);
+                    break;
+
+                default:
+                    printOutput(`<span style="color:#ff5555">zsh: command not found: ${escapeHtml(cmd)}</span>`);
+            }
+        }
+
+        function typeWriter(text, className, speed) {
+            return new Promise(resolve => {
+                const div = document.createElement('div');
+                div.className = className;
+                historyDiv.appendChild(div);
+                
+                let i = 0;
+                function type() {
+                    if (i < text.length) {
+                        div.textContent += text.charAt(i);
+                        i++;
+                        setTimeout(type, speed);
+                    } else {
+                        resolve();
+                    }
+                }
+                type();
             });
-
-            draw();
-        })();
-
-        (function() {
-            const content = document.getElementById('terminalContent');
-
-            const commands = [
-                {
-                    cmd: './whoami.sh',
-                    out: `
-                        <div class="info-grid">
-                            <span class="label">Имя:</span><span>Роман</span>
-                            <span class="label">Псевдоним:</span><span>Siri_Lv <span style="color:var(--text-dim)">//</span> Siright</span>
-                            <span class="label">OS:</span><span style="color:#00ddff; font-weight:bold;">EndeavourOS</span> (Arch)
-                        </div>
-                    `
-                },
-                {
-                    cmd: 'cat skills.txt',
-                    out: `
-                        <div style="margin-top:6px">
-                            <span class="label">Языки программирования:</span><br>
-                            <span class="lang-tag" style="border-color:#3776ab;color:#4B8BBE">Python (Main)</span>
-                            <span class="lang-tag" style="border-color:#00599C;color:#659ad2">C++</span>
-                            <span class="lang-tag" style="border-color:#f89820;color:#f89820">Java</span>
-                            <span class="lang-tag" style="border-color:#000080;color:#8888ff">Lua</span>
-                            <span class="lang-tag" style="border-color:#68217A;color:#dcb3ff">C#</span>
-                        </div>
-                        <div style="margin-top:12px">
-                            <span class="label">Инструменты:</span> Godot Engine, Git, Docker<br>
-                            <span class="label">Инфраструктура:</span> 3 сервера (2x <span style="color:#fc0">DE</span>, 1x <span style="color:#00247d">UK</span>)
-                        </div>
-                    `
-                },
-                {
-                    cmd: 'ls -la ./projects/',
-                    out: `
-                        <table style="width:100%;text-align:left;margin-top:6px;border-collapse:collapse">
-                            <tr>
-                                <td style="padding:5px 0"><span style="color:#27c93f;margin-right:10px">drwx</span> <a href="https://t.me/Siright_Bot" target="_blank">Ai Telegram Bot</a></td>
-                                <td style="color:var(--text-dim)">[Telegram Bot]</td>
-                            </tr>
-                            <tr>
-                                <td style="padding:5px 0"><span style="color:#27c93f;margin-right:10px">-rwx</span> Api Keys Parser</td>
-                                <td style="color:var(--text-dim)">[Scanner]</td>
-                            </tr>
-                            <tr>
-                                <td style="padding:5px 0"><span style="color:#27c93f;margin-right:10px">-rwx</span> <a href="https://pypi.org/project/ekogram" target="_blank">ekogram</a></td>
-                                <td style="color:var(--text-dim)">[PyPI Lib]</td>
-                            </tr>
-                            <tr>
-                                <td style="padding:5px 0"><span style="color:#27c93f;margin-right:10px">drwx</span> Godot Games</td>
-                                <td style="color:var(--text-dim)">[GameDev]</td>
-                            </tr>
-                        </table>
-                    `
-                },
-                { cmd: '', out: '' }
-            ];
-
-            function delay(ms) {
-                return new Promise(function(r) { setTimeout(r, ms); });
-            }
-
-            async function typeText(text, el) {
-                for (let i = 0; i < text.length; i++) {
-                    el.textContent += text[i];
-                    await delay(35 + Math.random() * 50);
-                }
-            }
-
-            async function run() {
-                for (let i = 0; i < commands.length; i++) {
-                    const item = commands[i];
-
-                    const line = document.createElement('div');
-                    line.style.marginBottom = '6px';
-
-                    const prompt = document.createElement('span');
-                    prompt.className = 'prompt';
-                    prompt.textContent = '[siright@endeavouros]';
-
-                    const path = document.createElement('span');
-                    path.className = 'path';
-                    path.textContent = ' ~ ';
-
-                    const dollar = document.createTextNode('$ ');
-
-                    const cmd = document.createElement('span');
-                    cmd.className = 'command';
-
-                    const cursor = document.createElement('span');
-                    cursor.className = 'cursor';
-
-                    line.appendChild(prompt);
-                    line.appendChild(path);
-                    line.appendChild(dollar);
-                    line.appendChild(cmd);
-                    line.appendChild(cursor);
-
-                    content.appendChild(line);
-                    content.scrollTop = content.scrollHeight;
-
-                    if (item.cmd) {
-                        await delay(400);
-                        await typeText(item.cmd, cmd);
-                        await delay(200);
-                        cursor.remove();
-
-                        const output = document.createElement('div');
-                        output.className = 'output';
-                        output.innerHTML = item.out;
-                        content.appendChild(output);
-
-                        await delay(500);
-                    }
-
-                    content.scrollTop = content.scrollHeight;
-                }
-            }
-
-            setTimeout(run, 500);
-        })();
+        }
     </script>
 </body>
 </html>
