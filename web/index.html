@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b1020">
+  <meta name="description" content="SiriLV Web IDE — static VS Code-like browser editor for any device.">
+  <title>SiriLV Web IDE</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="titlebar">
+      <button id="mobileExplorer" class="icon-button mobile-only" type="button" aria-label="Explorer">☰</button>
+      <div class="brand"><span class="mark">▣</span><strong>SiriLV Web IDE</strong><em>static editor</em></div>
+      <nav class="top-actions" aria-label="IDE actions">
+        <button id="btnNewFile" type="button">New file</button>
+        <button id="btnNewFolder" type="button">New folder</button>
+        <button id="btnSave" type="button">Save</button>
+        <button id="btnPalette" type="button">Command</button>
+      </nav>
+    </header>
+
+    <aside class="activitybar" aria-label="Activity bar">
+      <button class="active" type="button" title="Explorer">☰</button>
+      <button id="btnPreview" type="button" title="Preview">◫</button>
+      <button id="btnImport" type="button" title="Import">⇪</button>
+      <button id="btnExport" type="button" title="Export">⇩</button>
+      <button id="btnTheme" type="button" title="Theme">◐</button>
+    </aside>
+
+    <aside class="sidebar" aria-label="Explorer and search">
+      <section class="panel explorer-panel">
+        <div class="panel-head"><b>Explorer</b><span>local workspace</span></div>
+        <div id="fileTree" class="file-tree"></div>
+      </section>
+      <section class="panel search-panel">
+        <div class="panel-head"><b>Search</b><span>in files</span></div>
+        <input id="searchInput" class="search-input" type="search" placeholder="Search workspace...">
+        <div id="searchResults" class="search-results"></div>
+      </section>
+      <section class="panel tools-panel">
+        <div class="panel-head"><b>Tools</b><span>portable actions</span></div>
+        <div class="tool-grid">
+          <button id="btnDownload" type="button">Download file</button>
+          <button id="btnReset" type="button">Reset demo</button>
+        </div>
+      </section>
+    </aside>
+
+    <main class="workspace" aria-label="Editor workspace">
+      <div id="tabs" class="tabs"></div>
+      <section class="editor-wrap">
+        <pre id="lineNumbers" class="line-numbers" aria-hidden="true">1</pre>
+        <textarea id="editor" class="editor" spellcheck="false" autocomplete="off" autocapitalize="off"></textarea>
+      </section>
+    </main>
+
+    <aside id="previewPanel" class="preview-panel" hidden>
+      <header><b id="previewTitle">Preview</b><button id="closePreview" type="button">×</button></header>
+      <div id="previewBody" class="preview-body"></div>
+    </aside>
+
+    <footer class="statusbar">
+      <span id="statusPath">/README.md</span>
+      <span id="statusLang">Markdown</span>
+      <span id="statusStats">0 lines · 0 chars</span>
+      <span id="statusSaved">saved</span>
+    </footer>
+  </div>
+
+  <div id="contextMenu" class="context-menu" hidden></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <section id="commandModal" class="modal" hidden>
+    <div class="modal-card">
+      <header><b>Command Palette</b><button id="closeCommands" type="button">×</button></header>
+      <input id="commandInput" type="search" placeholder="Type command...">
+      <div id="commandList" class="command-list"></div>
+    </div>
+  </section>
+
+  <input id="fileInput" type="file" multiple hidden>
+  <script src="app.js" defer></script>
+</body>
+</html>
