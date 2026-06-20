@@ -1,0 +1,8 @@
+(()=>{
+'use strict';
+const KEY='sirilv.os.theme.v1';
+const themes=['dark','cheek','cyan','violet','light'];
+function apply(t){document.documentElement.dataset.theme=t;localStorage.setItem(KEY,t)}
+function init(){apply(localStorage.getItem(KEY)||'dark');const top=document.querySelector('.topbar-actions');if(top&&!document.querySelector('.hub-switcher')){const nav=document.createElement('nav');nav.className='hub-switcher';nav.innerHTML='<a href="/">OS</a><a href="/web/">Web IDE</a><a href="https://github.com/SiriLV/cheekmes" target="_blank" rel="noopener">CheekMes</a><button id="themeToggle" type="button">Theme</button>';top.replaceChildren(nav)}const panel=document.createElement('section');panel.className='theme-panel';panel.hidden=true;panel.innerHTML='<b>Theme</b>'+themes.map(t=>`<button type="button" data-theme-pick="${t}">${t}</button>`).join('');document.body.append(panel);document.addEventListener('click',e=>{if(e.target.id==='themeToggle'){panel.hidden=!panel.hidden;return}const p=e.target.closest('[data-theme-pick]');if(p){apply(p.dataset.themePick);panel.hidden=true;return}if(!e.target.closest('.theme-panel,.hub-switcher'))panel.hidden=true});const launch=document.querySelector('.launcher-grid');if(launch&&!document.querySelector('[data-hub-added]')){const a=document.createElement('a');a.dataset.hubAdded='1';a.href='/web/';a.innerHTML='<b>Web IDE</b><span>Create, edit, import and export files in browser.</span>';const c=document.createElement('a');c.href='https://github.com/SiriLV/cheekmes';c.target='_blank';c.rel='noopener';c.innerHTML='<b>CheekMes</b><span>Messenger project and encrypted communication stack.</span>';launch.append(a,c)}}
+document.addEventListener('DOMContentLoaded',init);
+})();
