@@ -1,79 +1,107 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Siright - Backend Developer Portfolio">
-    <meta name="author" content="Roman (Siright)">
-    <title>sirilv@cachyos: ~</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description" content="SiriLV — developer portfolio rendered as an interactive Linux desktop in the browser." />
+  <meta name="author" content="SiriLV" />
+  <meta name="theme-color" content="#070b18" />
+  <meta property="og:title" content="SiriLV Linux Portfolio" />
+  <meta property="og:description" content="Interactive browser Linux desktop with terminal, files, projects and developer profile." />
+  <meta property="og:type" content="website" />
+  <title>SiriLV Linux Portfolio</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <canvas id="matrix-rain"></canvas>
-    <div class="cosmic-bg">
-        <div class="star-field"></div>
-        <div class="nebula-glow"></div>
+  <canvas id="space-canvas" aria-hidden="true"></canvas>
+  <div class="ambient" aria-hidden="true">
+    <span class="orb orb-a"></span>
+    <span class="orb orb-b"></span>
+    <span class="orb orb-c"></span>
+    <span class="grid-haze"></span>
+    <span class="scanline"></span>
+  </div>
+
+  <div id="boot-screen" class="boot-screen" aria-live="polite">
+    <div class="boot-card">
+      <div class="boot-logo">SiriLV<span>OS</span></div>
+      <div id="boot-log" class="boot-log"></div>
+      <div class="boot-progress"><span id="boot-progress-bar"></span></div>
     </div>
-    <div class="terminal-container">
-        <div class="terminal-window">
-            <div class="terminal-header">
-                <div class="header-left">
-                    <div class="window-dots">
-                        <span class="dot dot-close"></span>
-                        <span class="dot dot-minimize"></span>
-                        <span class="dot dot-maximize"></span>
-                    </div>
-                    <div class="terminal-title">
-                        <svg class="terminal-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="4 17 10 11 4 5"></polyline>
-                            <line x1="12" y1="19" x2="20" y2="19"></line>
-                        </svg>
-                        <span>sirilv@cachyos: ~</span>
-                    </div>
-                </div>
-                <div class="header-right">
-                    <button class="header-btn" id="theme-toggle" aria-label="Toggle theme">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="5"></circle>
-                            <line x1="12" y1="1" x2="12" y2="3"></line>
-                            <line x1="12" y1="21" x2="12" y2="23"></line>
-                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                            <line x1="1" y1="12" x2="3" y2="12"></line>
-                            <line x1="21" y1="12" x2="23" y2="12"></line>
-                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-            <div class="terminal-body" id="terminal-body">
-                <div class="output-container" id="output"></div>
-                <div class="input-line" id="input-line">
-                    <span class="prompt">
-                        <span class="prompt-user">sirilv</span>
-                        <span class="prompt-separator">@</span>
-                        <span class="prompt-host">cachyos</span>
-                    </span>
-                    <span class="prompt-path">~</span>
-                    <span class="prompt-symbol">❯</span>
-                    <input 
-                        type="text" 
-                        id="cmd-input" 
-                        autocomplete="off" 
-                        spellcheck="false"
-                        autofocus
-                    >
-                </div>
-            </div>
+  </div>
+
+  <main id="desktop" class="desktop" aria-label="SiriLV browser Linux desktop">
+    <header class="topbar">
+      <button class="launcher-button" id="launcher-button" type="button" aria-label="Open launcher">
+        <span class="linux-mark">◇</span>
+        <span>SiriLV OS</span>
+      </button>
+      <nav class="topbar-actions" aria-label="Quick actions">
+        <button type="button" data-open="terminal">Terminal</button>
+        <button type="button" data-open="projects">Projects</button>
+        <button type="button" data-open="files">Files</button>
+      </nav>
+      <div class="status-cluster" aria-label="System status">
+        <span id="status-network">wifi: secure</span>
+        <span id="status-load">load: 0.21</span>
+        <time id="clock" datetime=""></time>
+      </div>
+    </header>
+
+    <section class="desktop-icons" aria-label="Desktop applications">
+      <button class="desktop-icon" type="button" data-open="terminal"><span>▣</span><b>Terminal</b></button>
+      <button class="desktop-icon" type="button" data-open="projects"><span>◆</span><b>Projects</b></button>
+      <button class="desktop-icon" type="button" data-open="about"><span>◈</span><b>About</b></button>
+      <button class="desktop-icon" type="button" data-open="files"><span>▤</span><b>Files</b></button>
+      <button class="desktop-icon" type="button" data-open="monitor"><span>▥</span><b>Monitor</b></button>
+      <button class="desktop-icon" type="button" data-open="contact"><span>✉</span><b>Contact</b></button>
+    </section>
+
+    <section id="launcher" class="launcher" aria-label="Application launcher" hidden>
+      <div class="launcher-head">
+        <div>
+          <strong>Applications</strong>
+          <span>browser-native portfolio workspace</span>
         </div>
-    </div>
-    <div class="mobile-hint">
-        <p>Tap =]</p>
-    </div>
-    <script src="script.js"></script>
+        <kbd>Esc</kbd>
+      </div>
+      <div class="launcher-grid">
+        <button type="button" data-open="terminal"><b>Terminal</b><span>Shell, commands, virtual FS</span></button>
+        <button type="button" data-open="projects"><b>Projects</b><span>fgram, cheekmes, Asteroid, pmOS</span></button>
+        <button type="button" data-open="about"><b>About</b><span>Developer profile</span></button>
+        <button type="button" data-open="files"><b>Files</b><span>/home/sirilv portfolio tree</span></button>
+        <button type="button" data-open="monitor"><b>System Monitor</b><span>Animated browser telemetry</span></button>
+        <button type="button" data-open="contact"><b>Contact</b><span>GitHub and Telegram links</span></button>
+      </div>
+    </section>
+
+    <section id="window-layer" class="window-layer" aria-live="polite"></section>
+
+    <aside class="command-hints" aria-label="Mobile command shortcuts">
+      <button type="button" data-command="help">help</button>
+      <button type="button" data-command="fastfetch">fastfetch</button>
+      <button type="button" data-command="projects">projects</button>
+      <button type="button" data-command="tree">tree</button>
+      <button type="button" data-command="clear">clear</button>
+    </aside>
+
+    <footer class="dock" aria-label="Dock">
+      <button type="button" data-open="terminal" aria-label="Open Terminal"><span>▣</span></button>
+      <button type="button" data-open="projects" aria-label="Open Projects"><span>◆</span></button>
+      <button type="button" data-open="about" aria-label="Open About"><span>◈</span></button>
+      <button type="button" data-open="files" aria-label="Open Files"><span>▤</span></button>
+      <button type="button" data-open="monitor" aria-label="Open Monitor"><span>▥</span></button>
+      <button type="button" data-open="contact" aria-label="Open Contact"><span>✉</span></button>
+    </footer>
+  </main>
+
+  <noscript>
+    <section class="noscript-card">
+      <h1>SiriLV Portfolio</h1>
+      <p>JavaScript is required for the interactive Linux desktop. Projects: fgram, cheekmes, Asteroid Apps, PostMarketOS port for Samsung Galaxy Tab E 9.6.</p>
+    </section>
+  </noscript>
+
+  <script src="script.js" defer></script>
 </body>
 </html>
