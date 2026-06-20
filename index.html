@@ -7,66 +7,34 @@
   <meta name="author" content="SiriLV" />
   <meta name="theme-color" content="#070b18" />
   <meta property="og:title" content="SiriLV Linux Portfolio" />
-  <meta property="og:description" content="Interactive browser Linux desktop with terminal, files, projects and developer profile." />
+  <meta property="og:description" content="Interactive browser Linux desktop with Web IDE and CheekMes integration." />
   <meta property="og:type" content="website" />
   <title>SiriLV Linux Portfolio</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=20260620-4" />
   <link rel="alternate icon" href="/favicon.ico?v=20260620-4" />
   <link rel="stylesheet" href="style.css?v=20260620-4" />
+  <link rel="stylesheet" href="hub.css?v=20260620-8" />
 </head>
 <body>
   <canvas id="space-canvas" aria-hidden="true"></canvas>
-  <div class="ambient" aria-hidden="true">
-    <span class="orb orb-a"></span>
-    <span class="orb orb-b"></span>
-    <span class="orb orb-c"></span>
-    <span class="grid-haze"></span>
-    <span class="scanline"></span>
-  </div>
-
-  <div id="boot-screen" class="boot-screen" aria-live="polite">
-    <div class="boot-card">
-      <div class="boot-logo">SiriLV<span>OS</span></div>
-      <div id="boot-log" class="boot-log"></div>
-      <div class="boot-progress"><span id="boot-progress-bar"></span></div>
-    </div>
-  </div>
-
+  <div class="ambient" aria-hidden="true"><span class="orb orb-a"></span><span class="orb orb-b"></span><span class="orb orb-c"></span><span class="grid-haze"></span><span class="scanline"></span></div>
+  <div id="boot-screen" class="boot-screen" aria-live="polite"><div class="boot-card"><div class="boot-logo">SiriLV<span>OS</span></div><div id="boot-log" class="boot-log"></div><div class="boot-progress"><span id="boot-progress-bar"></span></div></div></div>
   <main id="desktop" class="desktop" aria-label="SiriLV browser Linux desktop">
     <header class="topbar">
-      <button class="launcher-button" id="launcher-button" type="button" aria-label="Open launcher">
-        <span class="linux-mark">◇</span>
-        <span>SiriLV OS</span>
-      </button>
-      <nav class="topbar-actions" aria-label="Quick actions">
-        <button type="button" data-open="terminal">Terminal</button>
-        <button type="button" data-open="projects">Projects</button>
-        <button type="button" data-open="files">Files</button>
-      </nav>
-      <div class="status-cluster" aria-label="System status">
-        <span id="status-network">wifi: secure</span>
-        <span id="status-load">load: 0.21</span>
-        <time id="clock" datetime=""></time>
-      </div>
+      <button class="launcher-button" id="launcher-button" type="button" aria-label="Open launcher"><span class="linux-mark">◇</span><span>SiriLV OS</span></button>
+      <nav class="topbar-actions" aria-label="Quick actions"><button type="button" data-open="terminal">Terminal</button><button type="button" data-open="projects">Projects</button><button type="button" data-open="files">Files</button></nav>
+      <div class="status-cluster" aria-label="System status"><span id="status-network">wifi: secure</span><span id="status-load">load: 0.21</span><time id="clock" datetime=""></time></div>
     </header>
-
     <section class="desktop-icons" aria-label="Desktop applications">
       <button class="desktop-icon" type="button" data-open="terminal"><span>▣</span><b>Terminal</b></button>
+      <a class="desktop-icon" href="/web/"><span>▤</span><b>Web IDE</b></a>
+      <a class="desktop-icon" href="https://github.com/SiriLV/cheekmes" target="_blank" rel="noopener"><span>◆</span><b>CheekMes</b></a>
       <button class="desktop-icon" type="button" data-open="projects"><span>◆</span><b>Projects</b></button>
       <button class="desktop-icon" type="button" data-open="about"><span>◈</span><b>About</b></button>
-      <button class="desktop-icon" type="button" data-open="files"><span>▤</span><b>Files</b></button>
-      <button class="desktop-icon" type="button" data-open="monitor"><span>▥</span><b>Monitor</b></button>
       <button class="desktop-icon" type="button" data-open="contact"><span>✉</span><b>Contact</b></button>
     </section>
-
     <section id="launcher" class="launcher" aria-label="Application launcher" hidden>
-      <div class="launcher-head">
-        <div>
-          <strong>Applications</strong>
-          <span>browser-native portfolio workspace</span>
-        </div>
-        <kbd>Esc</kbd>
-      </div>
+      <div class="launcher-head"><div><strong>Applications</strong><span>browser-native portfolio workspace</span></div><kbd>Esc</kbd></div>
       <div class="launcher-grid">
         <button type="button" data-open="terminal"><b>Terminal</b><span>Shell, commands, virtual FS</span></button>
         <button type="button" data-open="projects"><b>Projects</b><span>fgram, cheekmes, Asteroid, pmOS</span></button>
@@ -76,34 +44,12 @@
         <button type="button" data-open="contact"><b>Contact</b><span>GitHub and Telegram links</span></button>
       </div>
     </section>
-
     <section id="window-layer" class="window-layer" aria-live="polite"></section>
-
-    <aside class="command-hints" aria-label="Mobile command shortcuts">
-      <button type="button" data-command="help">help</button>
-      <button type="button" data-command="fastfetch">fastfetch</button>
-      <button type="button" data-command="projects">projects</button>
-      <button type="button" data-command="tree">tree</button>
-      <button type="button" data-command="clear">clear</button>
-    </aside>
-
-    <footer class="dock" aria-label="Dock">
-      <button type="button" data-open="terminal" aria-label="Open Terminal"><span>▣</span></button>
-      <button type="button" data-open="projects" aria-label="Open Projects"><span>◆</span></button>
-      <button type="button" data-open="about" aria-label="Open About"><span>◈</span></button>
-      <button type="button" data-open="files" aria-label="Open Files"><span>▤</span></button>
-      <button type="button" data-open="monitor" aria-label="Open Monitor"><span>▥</span></button>
-      <button type="button" data-open="contact" aria-label="Open Contact"><span>✉</span></button>
-    </footer>
+    <aside class="command-hints" aria-label="Mobile command shortcuts"><button type="button" data-command="help">help</button><button type="button" data-command="fastfetch">fastfetch</button><button type="button" data-command="projects">projects</button><button type="button" data-command="tree">tree</button><button type="button" data-command="clear">clear</button></aside>
+    <footer class="dock" aria-label="Dock"><button type="button" data-open="terminal" aria-label="Open Terminal"><span>▣</span></button><a href="/web/" aria-label="Open Web IDE"><span>▤</span></a><a href="https://github.com/SiriLV/cheekmes" target="_blank" rel="noopener" aria-label="Open CheekMes"><span>◆</span></a><button type="button" data-open="projects" aria-label="Open Projects"><span>◇</span></button><button type="button" data-open="contact" aria-label="Open Contact"><span>✉</span></button></footer>
   </main>
-
-  <noscript>
-    <section class="noscript-card">
-      <h1>SiriLV Portfolio</h1>
-      <p>JavaScript is required for the interactive Linux desktop. Projects: fgram, cheekmes, Asteroid Apps, PostMarketOS port Tablet Samsung Galaxy Tab E 9.6.</p>
-    </section>
-  </noscript>
-
+  <noscript><section class="noscript-card"><h1>SiriLV Portfolio</h1><p>JavaScript is required for the interactive Linux desktop. Projects: Web IDE, CheekMes, fgram, Asteroid Apps, PostMarketOS port for Samsung Galaxy Tab E 9.6.</p></section></noscript>
   <script src="script.js?v=20260620-4" defer></script>
+  <script src="hub.js?v=20260620-8" defer></script>
 </body>
 </html>
