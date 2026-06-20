@@ -7,14 +7,19 @@
   <meta name="description" content="SiriLV Web IDE — VSCodium-like static browser IDE for editing files on any device.">
   <title>SiriLV Web IDE</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="styles.css?v=20260620-7">
+  <link rel="stylesheet" href="styles.css?v=20260620-8">
 </head>
 <body>
   <div class="ide-shell" data-sidebar="explorer">
     <header class="titlebar">
-      <button id="toggleSidebar" class="title-icon mobile-only" type="button" aria-label="Open sidebar">☰</button>
-      <div class="window-controls" aria-hidden="true"><span></span><span></span><span></span></div>
-      <div class="brand"><span class="brand-mark">▣</span><b>SiriLV Web IDE</b><span>VSCodium-style static editor</span></div>
+      <button id="toggleSidebar" class="title-icon mobile-only" type="button" aria-label="Open sidebar">MENU</button>
+      <div class="system-badge" aria-hidden="true"><span></span><b>SLV</b></div>
+      <div class="brand"><span class="brand-mark">▣</span><b>SiriLV Web IDE</b><span>Codium-style static editor</span></div>
+      <nav class="project-switcher" aria-label="Project switcher">
+        <a href="/">OS</a>
+        <a href="/web/" aria-current="page">IDE</a>
+        <a href="https://github.com/SiriLV/cheekmes" target="_blank" rel="noopener">CheekMes</a>
+      </nav>
       <nav class="title-actions" aria-label="Project actions">
         <button id="newFileTop" type="button">New File</button>
         <button id="saveTop" type="button">Save</button>
@@ -24,21 +29,27 @@
     </header>
 
     <aside class="activitybar" aria-label="Activity bar">
-      <button class="activity active" type="button" data-panel="explorer" title="Explorer">📁</button>
-      <button class="activity" type="button" data-panel="search" title="Search">🔎</button>
-      <button class="activity" type="button" data-action="preview" title="Preview">◫</button>
-      <button class="activity" type="button" data-panel="settings" title="Settings">⚙</button>
-      <button class="activity" type="button" data-action="theme" title="Theme">◐</button>
+      <button class="activity active" type="button" data-panel="explorer" title="Explorer">EX</button>
+      <button class="activity" type="button" data-panel="search" title="Search">SR</button>
+      <button class="activity" type="button" data-action="preview" title="Preview">PV</button>
+      <button class="activity" type="button" data-panel="settings" title="Settings">UI</button>
+      <button class="activity" type="button" data-action="theme" title="Theme">TH</button>
     </aside>
 
     <aside id="sidebar" class="sidebar" aria-label="Side bar">
       <section class="side-panel" data-panel-view="explorer">
         <div class="side-head"><b>Explorer</b><span id="workspaceName">workspace</span></div>
         <div class="explorer-actions">
-          <button id="newFileSide" type="button" title="New file">＋ file</button>
-          <button id="newFolderSide" type="button" title="New folder">＋ folder</button>
+          <button id="newFileSide" type="button" title="New file">+ file</button>
+          <button id="newFolderSide" type="button" title="New folder">+ folder</button>
           <button id="importSide" type="button" title="Import files">import</button>
           <button id="exportSide" type="button" title="Export workspace">export</button>
+        </div>
+        <div class="ecosystem-card">
+          <b>Project links</b>
+          <a href="/">SiriLV OS</a>
+          <a href="/web/">Web IDE</a>
+          <a href="https://github.com/SiriLV/cheekmes" target="_blank" rel="noopener">CheekMes</a>
         </div>
         <div id="fileTree" class="file-tree" role="tree"></div>
       </section>
@@ -52,8 +63,11 @@
       <section class="side-panel" data-panel-view="settings" hidden>
         <div class="side-head"><b>Settings</b><span>interface</span></div>
         <div class="settings-grid">
-          <label>Theme<select id="setTheme"><option value="dark">Dark</option><option value="light">Light</option><option value="contrast">High contrast</option></select></label>
+          <label>Theme<select id="setTheme"><option value="dark">Dark</option><option value="light">Light</option><option value="contrast">High contrast</option><option value="cheek">CheekMes</option><option value="cyan">Cyan Glass</option><option value="violet">Violet Grid</option></select></label>
           <label>Accent<input id="setAccent" type="color"></label>
+          <label>Background<select id="setBgMode"><option value="solid">Solid</option><option value="gradient">Gradient</option><option value="mesh">Mesh</option></select></label>
+          <label>Background A<input id="setBgA" type="color"></label>
+          <label>Background B<input id="setBgB" type="color"></label>
           <label>Font size<input id="setFontSize" type="range" min="12" max="22"></label>
           <label>Line height<input id="setLineHeight" type="range" min="120" max="190"></label>
           <label>Tab size<input id="setTabSize" type="number" min="2" max="8"></label>
@@ -108,6 +122,6 @@
   </section>
 
   <input id="fileInput" type="file" multiple hidden>
-  <script src="app.js?v=20260620-6" defer></script>
+  <script src="app.js?v=20260620-8" defer></script>
 </body>
 </html>
