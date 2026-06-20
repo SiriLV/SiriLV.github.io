@@ -3,69 +3,95 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#0b1020">
-  <meta name="description" content="SiriLV Web IDE — static VS Code-like browser editor for any device.">
+  <meta name="theme-color" content="#1f1f1f">
+  <meta name="description" content="SiriLV Web IDE — VSCodium-like static browser IDE for editing files on any device.">
   <title>SiriLV Web IDE</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=20260620-5">
 </head>
 <body>
-  <div class="app-shell">
+  <div class="ide-shell" data-sidebar="explorer">
     <header class="titlebar">
-      <button id="mobileExplorer" class="icon-button mobile-only" type="button" aria-label="Explorer">☰</button>
-      <div class="brand"><span class="mark">▣</span><strong>SiriLV Web IDE</strong><em>static editor</em></div>
-      <nav class="top-actions" aria-label="IDE actions">
-        <button id="btnNewFile" type="button">New file</button>
-        <button id="btnNewFolder" type="button">New folder</button>
-        <button id="btnSave" type="button">Save</button>
-        <button id="btnPalette" type="button">Command</button>
+      <button id="toggleSidebar" class="title-icon mobile-only" type="button" aria-label="Open sidebar">☰</button>
+      <div class="window-controls" aria-hidden="true"><span></span><span></span><span></span></div>
+      <div class="brand"><span class="brand-mark">▣</span><b>SiriLV Web IDE</b><span>VSCodium-style static editor</span></div>
+      <nav class="title-actions" aria-label="Project actions">
+        <button id="newFileTop" type="button">New File</button>
+        <button id="saveTop" type="button">Save</button>
+        <button id="settingsTop" type="button">Settings</button>
+        <button id="paletteTop" type="button">Command</button>
       </nav>
     </header>
 
     <aside class="activitybar" aria-label="Activity bar">
-      <button class="active" type="button" title="Explorer">☰</button>
-      <button id="btnPreview" type="button" title="Preview">◫</button>
-      <button id="btnImport" type="button" title="Import">⇪</button>
-      <button id="btnExport" type="button" title="Export">⇩</button>
-      <button id="btnTheme" type="button" title="Theme">◐</button>
+      <button class="activity active" type="button" data-panel="explorer" title="Explorer">📁</button>
+      <button class="activity" type="button" data-panel="search" title="Search">🔎</button>
+      <button class="activity" type="button" data-action="preview" title="Preview">◫</button>
+      <button class="activity" type="button" data-panel="settings" title="Settings">⚙</button>
+      <button class="activity" type="button" data-action="theme" title="Theme">◐</button>
     </aside>
 
-    <aside class="sidebar" aria-label="Explorer and search">
-      <section class="panel explorer-panel">
-        <div class="panel-head"><b>Explorer</b><span>local workspace</span></div>
-        <div id="fileTree" class="file-tree"></div>
+    <aside id="sidebar" class="sidebar" aria-label="Side bar">
+      <section class="side-panel" data-panel-view="explorer">
+        <div class="side-head"><b>Explorer</b><span id="workspaceName">workspace</span></div>
+        <div class="explorer-actions">
+          <button id="newFileSide" type="button" title="New file">＋ file</button>
+          <button id="newFolderSide" type="button" title="New folder">＋ folder</button>
+          <button id="importSide" type="button" title="Import files">import</button>
+          <button id="exportSide" type="button" title="Export workspace">export</button>
+        </div>
+        <div id="fileTree" class="file-tree" role="tree"></div>
       </section>
-      <section class="panel search-panel">
-        <div class="panel-head"><b>Search</b><span>in files</span></div>
-        <input id="searchInput" class="search-input" type="search" placeholder="Search workspace...">
+
+      <section class="side-panel" data-panel-view="search" hidden>
+        <div class="side-head"><b>Search</b><span>workspace</span></div>
+        <input id="searchInput" class="input" type="search" placeholder="Search files and content">
         <div id="searchResults" class="search-results"></div>
       </section>
-      <section class="panel tools-panel">
-        <div class="panel-head"><b>Tools</b><span>portable actions</span></div>
-        <div class="tool-grid">
-          <button id="btnDownload" type="button">Download file</button>
-          <button id="btnReset" type="button">Reset demo</button>
+
+      <section class="side-panel" data-panel-view="settings" hidden>
+        <div class="side-head"><b>Settings</b><span>interface</span></div>
+        <div class="settings-grid">
+          <label>Theme<select id="setTheme"><option value="dark">Dark</option><option value="light">Light</option><option value="contrast">High contrast</option></select></label>
+          <label>Accent<input id="setAccent" type="color"></label>
+          <label>Font size<input id="setFontSize" type="range" min="12" max="22"></label>
+          <label>Line height<input id="setLineHeight" type="range" min="120" max="190"></label>
+          <label>Tab size<input id="setTabSize" type="number" min="2" max="8"></label>
+          <label>Explorer width<input id="setSidebarWidth" type="range" min="240" max="440"></label>
+          <label class="check"><input id="setWordWrap" type="checkbox"> Word wrap</label>
+          <label class="check"><input id="setCompact" type="checkbox"> Compact UI</label>
+          <label class="check"><input id="setAutosave" type="checkbox"> Autosave</label>
+        </div>
+        <div class="settings-actions">
+          <button id="resetSettings" type="button">Reset settings</button>
+          <button id="resetWorkspace" type="button">Reset workspace</button>
         </div>
       </section>
     </aside>
 
-    <main class="workspace" aria-label="Editor workspace">
-      <div id="tabs" class="tabs"></div>
-      <section class="editor-wrap">
+    <main class="editor-area" aria-label="Editor area">
+      <div id="tabs" class="tabs" role="tablist"></div>
+      <section id="emptyState" class="empty-state" hidden>
+        <h1>SiriLV Web IDE</h1>
+        <p>No file is open. Create or select a file in Explorer.</p>
+        <button id="emptyNewFile" type="button">Create file</button>
+      </section>
+      <section id="editorWrap" class="editor-wrap">
         <pre id="lineNumbers" class="line-numbers" aria-hidden="true">1</pre>
-        <textarea id="editor" class="editor" spellcheck="false" autocomplete="off" autocapitalize="off"></textarea>
+        <textarea id="editor" class="editor" spellcheck="false" autocomplete="off" autocapitalize="off" aria-label="Code editor"></textarea>
       </section>
     </main>
 
     <aside id="previewPanel" class="preview-panel" hidden>
-      <header><b id="previewTitle">Preview</b><button id="closePreview" type="button">×</button></header>
+      <header><b id="previewTitle">Preview</b><button id="closePreview" type="button" aria-label="Close preview">×</button></header>
       <div id="previewBody" class="preview-body"></div>
     </aside>
 
     <footer class="statusbar">
       <span id="statusPath">/README.md</span>
       <span id="statusLang">Markdown</span>
-      <span id="statusStats">0 lines · 0 chars</span>
+      <span id="statusStats">1:1 · 0 chars</span>
+      <span id="statusStorage">cookie/local</span>
       <span id="statusSaved">saved</span>
     </footer>
   </div>
@@ -75,13 +101,13 @@
 
   <section id="commandModal" class="modal" hidden>
     <div class="modal-card">
-      <header><b>Command Palette</b><button id="closeCommands" type="button">×</button></header>
-      <input id="commandInput" type="search" placeholder="Type command...">
+      <header><b>Command Palette</b><button id="closeCommands" type="button" aria-label="Close command palette">×</button></header>
+      <input id="commandInput" class="input" type="search" placeholder="Type a command">
       <div id="commandList" class="command-list"></div>
     </div>
   </section>
 
   <input id="fileInput" type="file" multiple hidden>
-  <script src="app.js" defer></script>
+  <script src="app.js?v=20260620-5" defer></script>
 </body>
 </html>
