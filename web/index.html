@@ -27,7 +27,6 @@
         <button id="paletteTop" type="button">Command</button>
       </nav>
     </header>
-
     <aside class="activitybar" aria-label="Activity bar">
       <button class="activity active" type="button" data-panel="explorer" title="Explorer">EX</button>
       <button class="activity" type="button" data-panel="search" title="Search">SR</button>
@@ -35,7 +34,6 @@
       <button class="activity" type="button" data-panel="settings" title="Settings">UI</button>
       <button class="activity" type="button" data-action="theme" title="Theme">TH</button>
     </aside>
-
     <aside id="sidebar" class="sidebar" aria-label="Side bar">
       <section class="side-panel" data-panel-view="explorer">
         <div class="side-head"><b>Explorer</b><span id="workspaceName">workspace</span></div>
@@ -45,21 +43,14 @@
           <button id="importSide" type="button" title="Import files">import</button>
           <button id="exportSide" type="button" title="Export workspace">export</button>
         </div>
-        <div class="ecosystem-card">
-          <b>Project links</b>
-          <a href="/">SiriLV OS</a>
-          <a href="/web/">Web IDE</a>
-          <a href="https://github.com/SiriLV/cheekmes" target="_blank" rel="noopener">CheekMes</a>
-        </div>
+        <div class="ecosystem-card"><b>Project links</b><a href="/">SiriLV OS</a><a href="/web/">Web IDE</a><a href="https://github.com/SiriLV/cheekmes" target="_blank" rel="noopener">CheekMes</a></div>
         <div id="fileTree" class="file-tree" role="tree"></div>
       </section>
-
       <section class="side-panel" data-panel-view="search" hidden>
         <div class="side-head"><b>Search</b><span>workspace</span></div>
         <input id="searchInput" class="input" type="search" placeholder="Search files and content">
         <div id="searchResults" class="search-results"></div>
       </section>
-
       <section class="side-panel" data-panel-view="settings" hidden>
         <div class="side-head"><b>Settings</b><span>interface</span></div>
         <div class="settings-grid">
@@ -76,53 +67,22 @@
           <label class="check"><input id="setCompact" type="checkbox"> Compact UI</label>
           <label class="check"><input id="setAutosave" type="checkbox"> Autosave</label>
         </div>
-        <div class="settings-actions">
-          <button id="resetSettings" type="button">Reset settings</button>
-          <button id="resetWorkspace" type="button">Reset workspace</button>
-        </div>
+        <div class="settings-actions"><button id="resetSettings" type="button">Reset settings</button><button id="resetWorkspace" type="button">Reset workspace</button></div>
       </section>
     </aside>
-
     <main class="editor-area" aria-label="Editor area">
       <div id="tabs" class="tabs" role="tablist"></div>
-      <section id="emptyState" class="empty-state" hidden>
-        <h1>SiriLV Web IDE</h1>
-        <p>No file is open. Create or select a file in Explorer.</p>
-        <button id="emptyNewFile" type="button">Create file</button>
-      </section>
-      <section id="editorWrap" class="editor-wrap">
-        <pre id="lineNumbers" class="line-numbers" aria-hidden="true">1</pre>
-        <textarea id="editor" class="editor" spellcheck="false" autocomplete="off" autocapitalize="off" aria-label="Code editor"></textarea>
-      </section>
+      <section id="emptyState" class="empty-state" hidden><h1>SiriLV Web IDE</h1><p>No file is open. Create or select a file in Explorer.</p><button id="emptyNewFile" type="button">Create file</button></section>
+      <section id="editorWrap" class="editor-wrap"><pre id="lineNumbers" class="line-numbers" aria-hidden="true">1</pre><textarea id="editor" class="editor" spellcheck="false" autocomplete="off" autocapitalize="off" aria-label="Code editor"></textarea></section>
     </main>
-
-    <aside id="previewPanel" class="preview-panel" hidden>
-      <header><b id="previewTitle">Preview</b><button id="closePreview" type="button" aria-label="Close preview">×</button></header>
-      <div id="previewBody" class="preview-body"></div>
-    </aside>
-
-    <footer class="statusbar">
-      <span id="statusPath">/README.md</span>
-      <span id="statusLang">Markdown</span>
-      <span id="statusStats">1:1 · 0 chars</span>
-      <span id="statusStorage">cookie/local</span>
-      <span id="statusSaved">saved</span>
-    </footer>
+    <aside id="previewPanel" class="preview-panel" hidden><header><b id="previewTitle">Preview</b><button id="closePreview" type="button" aria-label="Close preview">×</button></header><div id="previewBody" class="preview-body"></div></aside>
+    <footer class="statusbar"><span id="statusPath">/README.md</span><span id="statusLang">Markdown</span><span id="statusStats">1:1 · 0 chars</span><span id="statusStorage">cookie/local</span><span id="statusSaved">saved</span></footer>
   </div>
-
   <div id="contextMenu" class="context-menu" hidden></div>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-
-  <section id="commandModal" class="modal" hidden>
-    <div class="modal-card">
-      <header><b>Command Palette</b><button id="closeCommands" type="button" aria-label="Close command palette">×</button></header>
-      <input id="commandInput" class="input" type="search" placeholder="Type a command">
-      <div id="commandList" class="command-list"></div>
-    </div>
-  </section>
-
+  <section id="commandModal" class="modal" hidden><div class="modal-card"><header><b>Command Palette</b><button id="closeCommands" type="button" aria-label="Close command palette">×</button></header><input id="commandInput" class="input" type="search" placeholder="Type a command"><div id="commandList" class="command-list"></div></div></section>
   <input id="fileInput" type="file" multiple hidden>
   <script src="app.js?v=20260620-8" defer></script>
-  <script src="ide-integration.js?v=20260620-8" defer></script>
+  <script src="ide-integration.js?v=20260620-10" defer></script>
 </body>
 </html>
